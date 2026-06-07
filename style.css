@@ -1,0 +1,79 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: rgb(247, 228, 204);
+}
+
+body ul {
+    margin: 0;
+    padding: 0;
+    height: 60px;
+    overflow: hidden;
+    background-color: #333333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    list-style: none;
+}
+body ul li {
+    font-size: 20px;
+    margin: 0 12px;
+}
+body ul li a{
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+.nav-bar{
+    padding-top: 0px;
+    
+}
+body ul li a:hover{
+    color: black;
+}
+
+.container1{
+    font-size: 30px;
+    font-family:cursive;
+    margin: 30px;
+    margin-left: 470px;
+    margin-right: 470px;
+    padding:0 ;
+    height: 70px;
+    background-color: #f4b680;
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    list-style: none;
+    justify-content: center;
+    border-radius: 24px;
+}
+.hero1{
+    background-color: blue;
+    height: 450px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+}
+.immg {
+    flex: 0 0 40%;
+    text-align: left;
+}
+.immg img {
+    max-width: 100%;;
+    height: auto;
+}
+.img {
+    padding-left: 1000px;
+    z-index: 3;
+}
+.hero1 p {
+    font-size: 25px;
+    font-family: 'Great Vibes', cursive;
+font-size: 2rem;
+
+}
