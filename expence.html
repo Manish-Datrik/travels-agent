@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travels Agent</title>
+</head>
+<style>
+    p {
+        /* background-color: black; */
+        text-align: end;
+        margin-right: 600px;
+    }
+#ikk {
+    font-size: 50px;
+
+}
+h1 {
+    margin-top: 30px;
+    text-align: center;
+
+}
+.destination-search {
+    position: relative;
+    width: 100%;
+}
+#destinationInput {
+    font-family: cursive;
+    font-size: 20px;
+    width: 300px;
+    height: 40px;
+}
+#suggestions {
+    position: absolute;
+    width: 300px;
+    background: white;
+    border: 1.5px solid #ddd;
+    max-height: 200px;
+}
+
+
+
+.suggestion-item{
+    padding:12px;
+    cursor:pointer;
+}
+
+.suggestion-item:hover{
+    background:#f2f2f2;
+}
+</style>
+<body>
+    <h1>Do You Know Your <p1 id="ikk">Expence</p1>...?</h1>
+    <p>Before the trip, Make your Budget<br></p>
+    <h3>Starting Pooint</h3>
+
+    <input type="text" id="destinationInput" placeholder="Destination Input" autocomplete="off">
+    <div id="suggestions"></div>
+    <script>
+    const destinations = [
+        "Goa",
+        "Dubai",
+        "Singapore",
+        "Kashmir",
+        "Gokarna",
+        "Kerla",
+        "Manali",
+        "Ooty",
+        "Mysore",
+        "Kanyakumari",
+        "New York",
+        "Paris",
+        "London",
+        "Tokyo"
+    ]
+const input = document.getElementById("destinationInput");
+const suggestions = document.getElementById("suggestions");
+
+input.addEventListener("keyup", function () {
+
+    let value = input.value.toLowerCase();
+
+    suggestions.innerHTML = "";
+
+    if (value === "") return;
+
+    let filtered = destinations.filter(destination =>
+        destination.toLowerCase().includes(value)
+    );
+
+    filtered.forEach(destination => {
+
+        let div = document.createElement("div");
+
+        div.classList.add("suggestion-item");
+
+        div.innerText = destination;
+
+        div.onclick = function () {
+            input.value = destination;
+            suggestions.innerHTML = "";
+        };
+
+        suggestions.appendChild(div);
+
+    });
+
+});
+</script>
+</body>
+</html>
