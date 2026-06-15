@@ -20,15 +20,16 @@ h1 {
     text-align: center;
 
 }
-.destination-search {
-    position: relative;
-    width: 100%;
+.destination-search{
+    position:relative;
+    width:350px;
 }
-#destinationInput {
-    font-family: cursive;
-    font-size: 20px;
-    width: 300px;
-    height: 40px;
+
+#destinationInput{
+    width:200px;
+    height:40px;
+    padding-right:  150px; /* space for X */
+    font-size:20px;
 }
 #suggestions {
     position: absolute;
@@ -37,9 +38,6 @@ h1 {
     border: 1.5px solid #ddd;
     max-height: 200px;
 }
-
-
-
 .suggestion-item{
     padding:12px;
     cursor:pointer;
@@ -48,64 +46,106 @@ h1 {
 .suggestion-item:hover{
     background:#f2f2f2;
 }
+#clear{
+    position:absolute;
+    right:10px;
+    top:25px;
+    transform:translateY(-50%);
+    font-size:40px;
+    cursor:pointer;
+    color:gray;
+    display:none;
+    z-index:100;
+}
+#clear:hover {
+    color: black;
+}
+.mm{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    text-align: center;
+}
+h3 {
+    text-decoration: underline;
+}
+
 </style>
 <body>
     <h1>Do You Know Your <p1 id="ikk">Expence</p1>...?</h1>
     <p>Before the trip, Make your Budget<br></p>
-    <h3>Starting Pooint</h3>
-
-    <input type="text" id="destinationInput" placeholder="Destination Input" autocomplete="off">
+    <div class="mm">
+        <div class="aa">
+        <h3>From</h3>
+    <div class="destination-search">
+    <input type="text" id="destinationInput" placeholder="Destination Input" autocomplete="off"><span id="clear">&times;</span> 
     <div id="suggestions"></div>
+    </div>
+    </div>
+    
+    <div class="ee">
+    <h3>Select Your Destination</h3>
+    
+        <div class="destination-search">
+            <input type="text" id="destinationInput" placeholder="Select Your Destination" autocomplete="off"><span id="clear">&times;</span> 
+            <div id="suggestions"></div>
+        </div>
+    </div>
+    </div>
+    
+    
     <script>
-    const destinations = [
-        "Goa",
-        "Dubai",
-        "Singapore",
-        "Kashmir",
-        "Gokarna",
-        "Kerla",
-        "Manali",
-        "Ooty",
-        "Mysore",
-        "Kanyakumari",
-        "New York",
-        "Paris",
-        "London",
-        "Tokyo"
-    ]
+
 const input = document.getElementById("destinationInput");
 const suggestions = document.getElementById("suggestions");
 
-input.addEventListener("keyup", function () {
+input.addEventListener("keyup", async function () {
 
-    let value = input.value.toLowerCase();
+    let value = input.value;
 
-    suggestions.innerHTML = "";
 
-    if (value === "") return;
+    if (value.length <2){
+ 
+    suggestions.innerHTML = "";   
+    return;    
+    }
 
-    let filtered = destinations.filter(destination =>
-        destination.toLowerCase().includes(value)
-    );
+    try {
+        const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(value)}&format=json&limit=5`);
+        let filtered = await response.json();
+        suggestions.innerHTML = "";  
+        filtered.forEach(destination => {
 
-    filtered.forEach(destination => {
+            let div = document.createElement("div");
 
-        let div = document.createElement("div");
+            div.classList.add("suggestion-item");
 
-        div.classList.add("suggestion-item");
+            div.innerText = destination.display_name || destination;
 
-        div.innerText = destination;
+            div.onclick = function () {
+                input.value = destination.display_name || destination;
+                suggestions.innerHTML = "";
+            };
 
-        div.onclick = function () {
-            input.value = destination;
-            suggestions.innerHTML = "";
-        };
+            suggestions.appendChild(div);
 
-        suggestions.appendChild(div);
-
-    });
+        });
+    } catch(error) {
+        console.log(error);
+    }
 
 });
+const clearbtn= document.getElementById("clear");
+input.addEventListener("input",()=>{
+    clearbtn.style.display = input.value.length>0? "block" : "none";
+});
+ clearbtn.addEventListener("click",() => {
+    input.value="";
+    suggestions.innerHTML = "";
+    clearbtn.style.display = "none";
+    input.focus();
+ });
+
 </script>
 </body>
 </html>
