@@ -8,9 +8,6 @@ body {
     color: white;
 }
 
-.hero {
-    display: none;
-}
 body ul {
     margin: 0;
     padding: 0;
@@ -73,15 +70,9 @@ body ul li a:hover{
     max-width: 100%;;
     height: auto;
 }
-.img {
-    padding-left: 1000px;
-    z-index: 3;
-}
 .hero1 p {
-    font-size: 25px;
+    font-size: 2rem;
     font-family: 'Great Vibes', cursive;
-font-size: 2rem;
-
 }
 
 .hero2{
@@ -105,9 +96,6 @@ font-size: 2rem;
     color: white;
     margin: 0;
     line-height: 1.1;
-}
-p2 {
-    
 }
 .immg1 {
     flex: 0 0 50%;
