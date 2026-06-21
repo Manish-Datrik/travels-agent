@@ -57,6 +57,19 @@ node.js (version 24 or higher)
 mongodb instance running locally or remotely
 npm or yarn package manager
 
+### Environment setup
+create a .env file in the project root and add:
+```
+SERPAPI_KEY=your_private_api_key_here
+MONGODB_URI=your_mongodb_connection_string_here
+PORT=6001
+```
+
+if you are using a local mongodb instance, the uri may look like:
+```
+MONGODB_URI=mongodb://127.0.0.1:27017/travelagent
+```
+
 ## Features Implemented
 
 location autocomplete using nominatim open street map data
