@@ -16,11 +16,9 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(
-                135deg,
+            background: 
                 rgb(247, 228, 204),
-                rgb(225, 242, 225)
-            );
+                rgb(225, 242, 225);
             color: #333;
             min-height: 100vh;
         }
@@ -29,7 +27,6 @@
             background-color: #2c3e50;
             position: sticky;
             top: 0;
-            z-index: 100;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
@@ -49,7 +46,6 @@
             padding: 14px 18px;
             font-size: 16px;
             font-weight: 500;
-            transition: 0.3s ease;
         }
 
         .nav-bar a:hover {
@@ -94,7 +90,6 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-bottom: 10px;
-            opacity: 0.9;
         }
 
         .summary-card .value {
@@ -156,7 +151,6 @@
             background-color: #f9f9f9;
             font-size: 1rem;
             font-family: inherit;
-            transition: 0.3s ease;
         }
 
         .destination-search input {
@@ -170,7 +164,6 @@
             outline: none;
             border-color: #f4b680;
             background-color: white;
-            box-shadow: 0 0 0 4px rgba(244, 182, 128, 0.1);
         }
 
         .suggestions {
@@ -181,16 +174,13 @@
             border-top: none;
             max-height: 250px;
             overflow-y: auto;
-            z-index: 100;
             border-radius: 0 0 10px 10px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         }
 
         .suggestion-item {
             padding: 15px;
             cursor: pointer;
             border-bottom: 1px solid #f0f0f0;
-            transition: 0.2s ease;
         }
 
         .suggestion-item:hover {
@@ -202,7 +192,6 @@
             position: absolute;
             right: 15px;
             top: 50%;
-            transform: translateY(-50%);
             font-size: 24px;
             cursor: pointer;
             color: #999;
@@ -220,7 +209,6 @@
             background: #fff8ed;
             border: 1px solid #f4b680;
             border-radius: 14px;
-            box-shadow: 0 8px 20px rgba(244, 182, 128, 0.12);
             color: #2c3e50;
             line-height: 1.6;
         }
@@ -251,13 +239,11 @@
             font-weight: 600;
             cursor: pointer;
             text-transform: uppercase;
-            transition: 0.3s ease;
         }
 
         .btn-primary {
             background: linear-gradient(135deg, #f4b680, #e89b5e);
             color: white;
-            box-shadow: 0 4px 15px rgba(244, 182, 128, 0.4);
         }
 
         .btn-primary:hover {
@@ -468,7 +454,6 @@
         }
 
         async function getDistance(origin, destination) {
-            // Replace this placeholder with a real routing API.
             return 1200;
         }
 
@@ -702,16 +687,14 @@
                 !dateRange ||
                 travelers < 1
             ) {
-                alert('Please fill all details');
+                showResult('<div style="color:#b00020;font-weight:700;">Please fill all details</div>');
                 return;
             }
 
             const dates = dateRange.split(' to ');
 
             if (dates.length !== 2) {
-                alert(
-                    'Please select a departure and return date'
-                );
+                showResult('<div style="color:#b00020;font-weight:700;">Please select a departure and return date</div>');
                 return;
             }
 
@@ -793,39 +776,7 @@
             `);
 
             updateSummary();
-
-            try {
-                const response = await fetch(
-                    'http://localhost:6001/api/expenses',
-                    {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            fromCity: from,
-                            toCity: to,
-                            dateRange,
-                            passengers: travelers,
-                            hotelType,
-                            foodType: foodRate
-                        })
-                    }
-                );
-
-                const result = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(
-                        result.message ||
-                        'Expense could not be saved'
-                    );
-                }
-            } catch (error) {
-                alert(
-                    `Expense could not be saved: ${error.message}`
-                );
-            }
+            console.log('Save skipped: no backend persistence configured');
         });
     </script>
 </body>
