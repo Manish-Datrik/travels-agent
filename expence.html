@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travels Agent</title>
+    <title>Travels Agent - Budget Planner</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
@@ -16,9 +16,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: 
-                rgb(247, 228, 204),
-                rgb(225, 242, 225);
+            background: linear-gradient(135deg, rgb(247, 228, 204), rgb(225, 242, 225));
             color: #333;
             min-height: 100vh;
         }
@@ -27,7 +25,8 @@
             background-color: #2c3e50;
             position: sticky;
             top: 0;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
         }
 
         .nav-bar ul {
@@ -46,27 +45,34 @@
             padding: 14px 18px;
             font-size: 16px;
             font-weight: 500;
+            transition: all 0.2s ease;
         }
 
-        .nav-bar a:hover {
+        .nav-bar a:hover,
+        .nav-bar a.active {
             background-color: #f4b680;
             color: #2c3e50;
         }
 
         .page-header {
             text-align: center;
-            padding: 60px 20px 40px;
+            padding: 50px 20px 30px;
+        }
+
+        .page-header h1 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: #2c3e50;
+            margin-bottom: 8px;
         }
 
         .page-header p {
-            margin-top: 10px;
-            font-size: 1.2rem;
-            color: #666;
+            font-size: 1.15rem;
+            color: #555;
         }
 
         .container {
             max-width: 1000px;
-            margin: 40px auto;
+            margin: 20px auto 60px;
             padding: 0 20px;
         }
 
@@ -80,58 +86,58 @@
         .summary-card {
             background: linear-gradient(135deg, #f4b680, #e89b5e);
             color: white;
-            padding: 25px;
-            border-radius: 12px;
+            padding: 22px 20px;
+            border-radius: 14px;
             text-align: center;
+            box-shadow: 0 6px 18px rgba(244, 182, 128, 0.35);
         }
 
         .summary-card h3 {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            opacity: 0.9;
         }
 
         .summary-card .value {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 700;
         }
 
         .form-card {
             background: white;
-            border-radius: 15px;
-            padding: 50px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
             margin-bottom: 40px;
         }
 
         .form-card h2 {
             font-size: 1.8rem;
             color: #2c3e50;
-            margin-bottom: 35px;
+            margin-bottom: 30px;
             text-align: center;
         }
 
         .form-section {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            margin-bottom: 35px;
+            gap: 25px;
+            margin-bottom: 25px;
         }
 
         .form-group {
             display: flex;
             flex-direction: column;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         .form-group label {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
             color: #2c3e50;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
+            margin-bottom: 8px;
         }
 
         .destination-search {
@@ -148,9 +154,10 @@
             padding: 12px 15px;
             border: 2px solid #e8e8e8;
             border-radius: 10px;
-            background-color: #f9f9f9;
+            background-color: #fcfcfc;
             font-size: 1rem;
             font-family: inherit;
+            transition: border-color 0.2s ease;
         }
 
         .destination-search input {
@@ -175,24 +182,28 @@
             max-height: 250px;
             overflow-y: auto;
             border-radius: 0 0 10px 10px;
+            z-index: 50;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
         }
 
         .suggestion-item {
-            padding: 15px;
+            padding: 12px 15px;
             cursor: pointer;
             border-bottom: 1px solid #f0f0f0;
+            font-size: 0.9rem;
         }
 
         .suggestion-item:hover {
             background: #fff5e6;
-            padding-left: 20px;
+            color: #d88344;
         }
 
         .clear {
             position: absolute;
             right: 15px;
             top: 50%;
-            font-size: 24px;
+            transform: translateY(-50%);
+            font-size: 22px;
             cursor: pointer;
             color: #999;
             display: none;
@@ -200,55 +211,37 @@
         }
 
         .clear:hover {
-            color: #f4b680;
-        }
-
-        #resultBox {
-            margin-top: 24px;
-            padding: 24px;
-            background: #fff8ed;
-            border: 1px solid #f4b680;
-            border-radius: 14px;
-            color: #2c3e50;
-            line-height: 1.6;
-        }
-
-        .flatpickr-day.selected,
-        .flatpickr-day.startRange,
-        .flatpickr-day.endRange {
-            background: #f4b680;
-            border-color: #f4b680;
-        }
-
-        .flatpickr-day.inRange {
-            background: #fff5e6;
+            color: #e74c3c;
         }
 
         .form-actions {
             display: flex;
             gap: 15px;
             justify-content: center;
-            margin: 40px 0;
+            margin: 30px 0 20px;
         }
 
         .btn {
-            padding: 14px 40px;
+            padding: 14px 36px;
             border: none;
             border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: 600;
+            font-size: 1rem;
+            font-weight: 700;
             cursor: pointer;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.25s ease;
         }
 
         .btn-primary {
             background: linear-gradient(135deg, #f4b680, #e89b5e);
             color: white;
+            box-shadow: 0 4px 14px rgba(244, 182, 128, 0.4);
         }
 
         .btn-primary:hover {
-            background: white;
-            color: #2c3e50;
+            background: linear-gradient(135deg, #e89b5e, #d88344);
+            transform: translateY(-2px);
         }
 
         .btn-secondary {
@@ -256,9 +249,117 @@
             color: white;
         }
 
+        .btn-secondary:hover {
+            background: #1a252f;
+        }
+
+        #resultBox {
+            margin-top: 24px;
+        }
+
+        .report-card {
+            background: #fffdf9;
+            border: 2px solid #f4b680;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 8px 24px rgba(244, 182, 128, 0.2);
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px dashed #f4b680;
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .report-header h2 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin: 0;
+            text-align: left;
+        }
+
+        .report-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+            background: #ffffff;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid #fae1cc;
+        }
+
+        .report-grid-item {
+            font-size: 0.95rem;
+            color: #444;
+        }
+
+        .report-grid-item strong {
+            color: #2c3e50;
+        }
+
+        .report-breakdown {
+            margin: 20px 0;
+        }
+
+        .breakdown-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f2e4d5;
+            font-size: 1.05rem;
+        }
+
+        .breakdown-row.total {
+            border-top: 2px solid #2c3e50;
+            border-bottom: none;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2c3e50;
+            padding-top: 16px;
+            margin-top: 8px;
+        }
+
+        .flight-badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            background: #27ae60;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-left: 6px;
+            font-weight: 600;
+        }
+
+        .flight-notice {
+            background: #fff3cd;
+            color: #856404;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            margin: 12px 0;
+            border-left: 4px solid #ffeeba;
+        }
+
+        .flatpickr-day.selected,
+        .flatpickr-day.startRange,
+        .flatpickr-day.endRange {
+            background: #f4b680 !important;
+            border-color: #f4b680 !important;
+        }
+
+        .flatpickr-day.inRange {
+            background: #fff5e6 !important;
+        }
+
         @media (max-width: 768px) {
             .form-card {
-                padding: 25px;
+                padding: 24px;
             }
 
             .form-actions {
@@ -286,18 +387,14 @@
         <ul>
             <li><a href="index.html">Home</a></li>
             <li><a href="makeyourtrip.html">Make Your Trip</a></li>
-            <li>
-                <a href="populardestinations.html">
-                    Popular Destinations
-                </a>
-            </li>
-            <li><a href="expence.html">Budget Planner</a></li>
+            <li><a href="populardestinations.html">Popular Destinations</a></li>
+            <li><a href="expence.html" class="active">Budget Planner</a></li>
         </ul>
     </nav>
 
     <header class="page-header">
         <h1>Travel Budget Planner</h1>
-        <p>Plan your trip nicely and know your expenses</p>
+        <p>Real-time live flight rates, accommodation, dining, and route estimates</p>
     </header>
 
     <main class="container">
@@ -324,108 +421,90 @@
             <form id="budgetForm">
                 <div class="form-section">
                     <div class="form-group">
-                        <label for="fromCity">
-                            From (Origin)
-                        </label>
-
+                        <label for="fromCity">From (Origin City / Airport)</label>
                         <div class="destination-search">
                             <input
                                 type="text"
                                 id="fromCity"
                                 class="destinationInput"
                                 data-suggestions-id="suggestionsFrom"
-                                placeholder="Where are you travelling from?"
+                                placeholder="E.g. New Delhi, London, New York"
                                 autocomplete="off"
+                                required
                             >
-
                             <span class="clear">&times;</span>
-                            <div id="suggestionsFrom"
-                                 class="suggestions"></div>
+                            <div id="suggestionsFrom" class="suggestions"></div>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="toCity">
-                            To (Destination)
-                        </label>
-
+                        <label for="toCity">To (Destination City / Airport)</label>
                         <div class="destination-search">
                             <input
                                 type="text"
                                 id="toCity"
                                 class="destinationInput"
                                 data-suggestions-id="suggestionsTo"
-                                placeholder="Where are you traveling to?"
+                                placeholder="E.g. Dubai, Singapore, Goa"
                                 autocomplete="off"
+                                required
                             >
-
                             <span class="clear">&times;</span>
-                            <div id="suggestionsTo"
-                                 class="suggestions"></div>
+                            <div id="suggestionsTo" class="suggestions"></div>
                         </div>
                     </div>
                 </div>
 
                 <div class="form-section">
                     <div class="form-group">
-                        <label for="dateRange">
-                            Travel Dates
-                        </label>
-
+                        <label for="dateRange">Travel Dates (Departure to Return)</label>
                         <input
                             type="text"
                             id="dateRange"
-                            placeholder="Click for dates"
+                            placeholder="Select travel dates"
                             readonly
+                            required
                         >
                     </div>
 
                     <div class="form-group">
-                        <label for="passengers">
-                            Number of Travelers
-                        </label>
-
+                        <label for="passengers">Number of Travelers</label>
                         <input
                             type="number"
                             id="passengers"
                             class="passengers-input"
                             min="1"
+                            max="9"
                             value="1"
-                            placeholder="How many?"
+                            placeholder="1 - 9"
+                            required
                         >
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="hotelType">Hotel Type</label>
+                <div class="form-section">
+                    <div class="form-group">
+                        <label for="hotelType">Hotel Rating</label>
+                        <select id="hotelType">
+                            <option value="3">3 Star Standard ($70 / night)</option>
+                            <option value="4" selected>4 Star Premium ($120 / night)</option>
+                            <option value="5">5 Star Luxury Resort ($190 / night)</option>
+                        </select>
+                    </div>
 
-                    <select id="hotelType">
-                        <option value="3">3 Star</option>
-                        <option value="4">4 Star</option>
-                        <option value="5">5 Star</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="foodType">Food Preference</label>
-
-                    <select id="foodType">
-                        <option value="20">Budget</option>
-                        <option value="40">Standard</option>
-                        <option value="70">Luxury</option>
-                    </select>
+                    <div class="form-group">
+                        <label for="foodType">Dining Preference</label>
+                        <select id="foodType">
+                            <option value="20">Budget & Street Food ($20 / day)</option>
+                            <option value="40" selected>Standard Dining ($40 / day)</option>
+                            <option value="70">Gourmet & Fine Dining ($70 / day)</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="form-actions">
-                    <button type="submit"
-                            class="btn btn-primary">
-                        Calculate
-                    </button>
-
-                    <button type="reset"
-                            class="btn btn-secondary">
-                        Clear Form
-                    </button>
+                    <button type="submit" class="btn btn-primary">Calculate Expense</button>
+                    <button type="reset" class="btn btn-secondary">Clear Form</button>
                 </div>
 
                 <div id="resultBox"></div>
@@ -436,21 +515,27 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <script>
-        async function getFlightPrice(
-            origin,
-            destination,
-            departureDate
-        ) {
-                try {
-                    const response = await fetch(
-                        `http://localhost:6001/api/flight-price?origin=${encodeURIComponent(origin)}&destination=${encodeURIComponent(destination)}&departureDate=${departureDate}`
-                    );
-                    const data = await response.json();
-                    return data.price || 320;
-                    } catch (error) {
-                        console.error('Flight price fetch failed:', error);
-                        return 320;
-                    }
+        async function getFlightPrice(origin, destination, departureDate, returnDate, travelers) {
+            const params = new URLSearchParams({
+                origin,
+                destination,
+                departureDate,
+                travelers: String(travelers)
+            });
+
+            if (returnDate) {
+                params.set("returnDate", returnDate);
+            }
+
+            const apiBase = window.location.origin.startsWith('http') ? window.location.origin : 'http://localhost:6001';
+            const response = await fetch(`${apiBase}/api/flight-price?${params}`);
+            const data = await response.json();
+
+            if (!response.ok || !data.success) {
+                throw new Error(data.error || "Unable to fetch live flight prices.");
+            }
+
+            return data;
         }
 
         async function getDistance(origin, destination) {
@@ -461,87 +546,54 @@
             if (hotelType === '3') return 70;
             if (hotelType === '4') return 120;
             if (hotelType === '5') return 190;
-
             return 100;
         }
 
         function initDestinationAutocomplete(container) {
-            const input =
-                container.querySelector('.destinationInput');
-
-            const suggestions = document.getElementById(
-                input.dataset.suggestionsId
-            );
-
-            const clearButton =
-                container.querySelector('.clear');
+            const input = container.querySelector('.destinationInput');
+            const suggestions = document.getElementById(input.dataset.suggestionsId);
+            const clearButton = container.querySelector('.clear');
 
             async function updateSuggestions() {
                 const value = input.value.trim();
                 suggestions.innerHTML = '';
 
-                if (value.length < 2) {
-                    return;
-                }
+                if (value.length < 2) return;
 
                 try {
-                    const url =
-                        'https://nominatim.openstreetmap.org/search' +
-                        `?q=${encodeURIComponent(value)}` +
-                        '&format=json&limit=5';
-
+                    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(value)}&format=json&limit=5`;
                     const response = await fetch(url);
                     const results = await response.json();
 
                     results.forEach((item) => {
-                        const suggestion =
-                            document.createElement('div');
-
-                        suggestion.classList.add(
-                            'suggestion-item'
-                        );
-
+                        const suggestion = document.createElement('div');
+                        suggestion.classList.add('suggestion-item');
                         suggestion.innerText = item.display_name;
 
-                        suggestion.addEventListener(
-                            'click',
-                            () => {
-                                input.value = item.display_name;
-                                suggestions.innerHTML = '';
-
-                                clearButton.style.display =
-                                    input.value ? 'block' : 'none';
-
-                                updateSummary();
-                            }
-                        );
+                        suggestion.addEventListener('click', () => {
+                            input.value = item.display_name;
+                            suggestions.innerHTML = '';
+                            clearButton.style.display = input.value ? 'block' : 'none';
+                            updateSummary();
+                        });
 
                         suggestions.appendChild(suggestion);
                     });
                 } catch (error) {
-                    console.error(
-                        'Suggestion fetch failed:',
-                        error
-                    );
+                    console.error('Suggestion fetch failed:', error);
                 }
             }
 
             input.addEventListener('input', () => {
-                clearButton.style.display =
-                    input.value.length > 0
-                        ? 'block'
-                        : 'none';
-
+                clearButton.style.display = input.value.length > 0 ? 'block' : 'none';
                 updateSuggestions();
             });
 
             clearButton.addEventListener('click', (event) => {
                 event.preventDefault();
-
                 input.value = '';
                 suggestions.innerHTML = '';
                 clearButton.style.display = 'none';
-
                 input.focus();
                 updateSummary();
             });
@@ -554,69 +606,37 @@
         }
 
         function updateSummary() {
-            const travelers =
-                document.getElementById('passengers').value || '1';
+            const travelers = document.getElementById('passengers').value || '1';
+            const from = document.getElementById('fromCity').value;
+            const to = document.getElementById('toCity').value;
+            const dateRange = document.getElementById('dateRange').value;
 
-            const from =
-                document.getElementById('fromCity').value;
-
-            const to =
-                document.getElementById('toCity').value;
-
-            const dateRange =
-                document.getElementById('dateRange').value;
-
-            document.getElementById(
-                'totalTravelers'
-            ).textContent = travelers;
-
-            document.getElementById(
-                'routeDisplay'
-            ).textContent =
-                from && to
-                    ? `${from.split(',')[0]} → ${to.split(',')[0]}`
-                    : '-';
+            document.getElementById('totalTravelers').textContent = travelers;
+            document.getElementById('routeDisplay').textContent =
+                from && to ? `${from.split(',')[0]} → ${to.split(',')[0]}` : '-';
 
             if (!dateRange) {
-                document.getElementById(
-                    'tripDuration'
-                ).textContent = '-';
-
+                document.getElementById('tripDuration').textContent = '-';
                 return;
             }
 
             const dates = dateRange.split(' to ');
-
             if (dates.length !== 2) {
-                document.getElementById(
-                    'tripDuration'
-                ).textContent = '-';
-
+                document.getElementById('tripDuration').textContent = '-';
                 return;
             }
 
             const start = new Date(dates[0]);
             const end = new Date(dates[1]);
-
-            const days =
-                Math.ceil(
-                    (end - start) / (1000 * 60 * 60 * 24)
-                ) + 1;
-
-            document.getElementById(
-                'tripDuration'
-            ).textContent = `${days} days`;
+            const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+            document.getElementById('tripDuration').textContent = `${days} days`;
         }
 
         function showResult(html) {
-            document.getElementById(
-                'resultBox'
-            ).innerHTML = html;
+            document.getElementById('resultBox').innerHTML = html;
         }
 
-        document
-            .querySelectorAll('.destination-search')
-            .forEach(initDestinationAutocomplete);
+        document.querySelectorAll('.destination-search').forEach(initDestinationAutocomplete);
 
         flatpickr('#dateRange', {
             mode: 'range',
@@ -625,158 +645,146 @@
             onChange: updateSummary
         });
 
-        document.getElementById(
-            'passengers'
-        ).addEventListener('change', updateSummary);
+        document.getElementById('passengers').addEventListener('change', updateSummary);
+        document.getElementById('hotelType').addEventListener('change', updateSummary);
+        document.getElementById('foodType').addEventListener('change', updateSummary);
 
-        document.getElementById(
-            'hotelType'
-        ).addEventListener('change', updateSummary);
-
-        document.getElementById(
-            'foodType'
-        ).addEventListener('change', updateSummary);
-
-        document.getElementById(
-            'budgetForm'
-        ).addEventListener('reset', () => {
+        document.getElementById('budgetForm').addEventListener('reset', () => {
             setTimeout(() => {
                 updateSummary();
                 showResult('');
             });
         });
 
-        document.getElementById(
-            'budgetForm'
-        ).addEventListener('submit', async (event) => {
+        document.getElementById('budgetForm').addEventListener('submit', async (event) => {
             event.preventDefault();
 
-            const from = document.getElementById(
-                'fromCity'
-            ).value.trim();
+            const from = document.getElementById('fromCity').value.trim();
+            const to = document.getElementById('toCity').value.trim();
+            const dateRange = document.getElementById('dateRange').value.trim();
+            const travelers = Number.parseInt(document.getElementById('passengers').value, 10) || 1;
+            const hotelType = document.getElementById('hotelType').value;
+            const foodRate = Number.parseFloat(document.getElementById('foodType').value);
 
-            const to = document.getElementById(
-                'toCity'
-            ).value.trim();
-
-            const dateRange = document.getElementById(
-                'dateRange'
-            ).value.trim();
-
-            const travelers =
-                Number.parseInt(
-                    document.getElementById(
-                        'passengers'
-                    ).value,
-                    10
-                ) || 1;
-
-            const hotelType = document.getElementById(
-                'hotelType'
-            ).value;
-
-            const foodRate = Number.parseFloat(
-                document.getElementById(
-                    'foodType'
-                ).value
-            );
-
-            if (
-                !from ||
-                !to ||
-                !dateRange ||
-                travelers < 1
-            ) {
-                showResult('<div style="color:#b00020;font-weight:700;">Please fill all details</div>');
+            if (!from || !to || !dateRange || travelers < 1) {
+                showResult('<div style="color:#b00020; font-weight:700; padding:15px; text-align:center;">Please fill all journey details.</div>');
                 return;
             }
 
             const dates = dateRange.split(' to ');
-
             if (dates.length !== 2) {
-                showResult('<div style="color:#b00020;font-weight:700;">Please select a departure and return date</div>');
+                showResult('<div style="color:#b00020; font-weight:700; padding:15px; text-align:center;">Please select both departure and return dates.</div>');
                 return;
             }
 
             const start = new Date(dates[0]);
             const end = new Date(dates[1]);
+            const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
 
-            const days =
-                Math.ceil(
-                    (end - start) / (1000 * 60 * 60 * 24)
-                ) + 1;
+            showResult(`
+                <div style="text-align: center; padding: 25px;">
+                    <div style="font-size: 1.2rem; color: #2c3e50; font-weight: 600; margin-bottom: 8px;">
+                        ✈️ Searching live flight prices & estimating trip budget...
+                    </div>
+                    <div style="color: #666; font-size: 0.95rem;">Checking SerpApi Google Flights engine for routes between ${from.split(',')[0]} and ${to.split(',')[0]}...</div>
+                </div>
+            `);
 
-            const flightCost = await getFlightPrice(
-                from,
-                to,
-                dates[0]
-            );
+            let flightCost = 0;
+            let isLiveFlight = false;
+            let flightNoticeHtml = '';
+
+            try {
+                const flightResult = await getFlightPrice(from, to, dates[0], dates[1], travelers);
+                flightCost = flightResult.price;
+                isLiveFlight = true;
+            } catch (flightErr) {
+                console.warn("Live flight lookup failed, using estimated route baseline:", flightErr.message);
+                const distanceKm = await getDistance(from, to);
+                // Baseline fallback calculation
+                flightCost = (250 + (distanceKm * 0.12)) * travelers;
+                flightNoticeHtml = `
+                    <div class="flight-notice">
+                        ℹ️ <strong>Flight Note:</strong> Live flight search returned: "${flightErr.message}". 
+                        Using estimated round-trip route pricing ($${flightCost.toFixed(2)}) based on distance.
+                    </div>
+                `;
+            }
 
             const distanceKm = await getDistance(from, to);
-
-            const hotelRate = await getHotelPrice(
-                to,
-                hotelType
-            );
-
-            const hotelCost =
-                hotelRate * days * travelers;
-
-            const foodCost =
-                foodRate * days * travelers;
-
+            const hotelRate = await getHotelPrice(to, hotelType);
+            const hotelCost = hotelRate * days * travelers;
+            const foodCost = foodRate * days * travelers;
             const transportCost = distanceKm * 0.4;
 
-            const subtotal =
-                flightCost +
-                hotelCost +
-                foodCost +
-                transportCost;
-
+            const subtotal = flightCost + hotelCost + foodCost + transportCost;
             const tax = subtotal * 0.1;
             const total = subtotal + tax;
 
             showResult(`
-                <h2>Travel Expense Report</h2>
-                <p><strong>From:</strong> ${from}</p>
-                <p><strong>To:</strong> ${to}</p>
-                <p>
-                    <strong>Dates:</strong>
-                    ${dateRange} (${days} days)
-                </p>
-                <p>
-                    <strong>Travelers:</strong>
-                    ${travelers}
-                </p>
-                <hr>
-                <p>
-                    <strong>Flight Cost:</strong>
-                    $${flightCost.toFixed(2)}
-                </p>
-                <p>
-                    <strong>Hotel Cost:</strong>
-                    $${hotelCost.toFixed(2)}
-                </p>
-                <p>
-                    <strong>Food Cost:</strong>
-                    $${foodCost.toFixed(2)}
-                </p>
-                <p>
-                    <strong>Transport Cost:</strong>
-                    $${transportCost.toFixed(2)}
-                </p>
-                <p>
-                    <strong>Tax (10%):</strong>
-                    $${tax.toFixed(2)}
-                </p>
-                <hr>
-                <h2>
-                    Total Cost: $${total.toFixed(2)}
-                </h2>
+                <div class="report-card">
+                    <div class="report-header">
+                        <h2>Travel Expense Report</h2>
+                        <span style="font-size: 0.9rem; color: #666;">Generated on ${new Date().toLocaleDateString()}</span>
+                    </div>
+
+                    <div class="report-grid">
+                        <div class="report-grid-item"><strong>From:</strong> ${from.split(',')[0]}</div>
+                        <div class="report-grid-item"><strong>To:</strong> ${to.split(',')[0]}</div>
+                        <div class="report-grid-item"><strong>Duration:</strong> ${days} Days (${dateRange})</div>
+                        <div class="report-grid-item"><strong>Travelers:</strong> ${travelers} Person(s)</div>
+                    </div>
+
+                    ${flightNoticeHtml}
+
+                    <div class="report-breakdown">
+                        <div class="breakdown-row">
+                            <span>
+                                Flights (${travelers} travelers)
+                                ${isLiveFlight ? '<span class="flight-badge">Live SerpApi Rate</span>' : '<span class="flight-badge" style="background:#f39c12;">Estimated</span>'}
+                            </span>
+                            <strong>$${flightCost.toFixed(2)}</strong>
+                        </div>
+                        <div class="breakdown-row">
+                            <span>Hotel Accommodation (${hotelType}★ for ${days} nights)</span>
+                            <strong>$${hotelCost.toFixed(2)}</strong>
+                        </div>
+                        <div class="breakdown-row">
+                            <span>Food & Dining (${days} days)</span>
+                            <strong>$${foodCost.toFixed(2)}</strong>
+                        </div>
+                        <div class="breakdown-row">
+                            <span>Local Transfers & Route Transport</span>
+                            <strong>$${transportCost.toFixed(2)}</strong>
+                        </div>
+                        <div class="breakdown-row">
+                            <span>Taxes & Tourism Surcharges (10%)</span>
+                            <strong>$${tax.toFixed(2)}</strong>
+                        </div>
+                        <div class="breakdown-row total">
+                            <span>Total Estimated Trip Budget:</span>
+                            <span style="color: #0088cc;">$${total.toFixed(2)}</span>
+                        </div>
+                    </div>
+                </div>
             `);
 
             updateSummary();
-            console.log('Save skipped: no backend persistence configured');
+        });
+
+        // Auto-fill destination if passed via URL (e.g., from Popular Destinations or Search)
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const toParam = urlParams.get('to');
+            if (toParam) {
+                const toInput = document.getElementById('toCity');
+                if (toInput) {
+                    toInput.value = toParam;
+                    const clearBtn = toInput.closest('.destination-search')?.querySelector('.clear');
+                    if (clearBtn) clearBtn.style.display = 'block';
+                    updateSummary();
+                }
+            }
         });
     </script>
 </body>

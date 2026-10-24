@@ -3,148 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travels Agent</title>
+    <title>Travels Agent - Hotels</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-                body {
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    background-size: cover;
-}
-body ul {
-    margin: 0;
-    padding: 0;
-    height: 60px;
-    overflow: hidden;
-    background-color: #333333;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: nowrap;
-    list-style: none;
-}
+        .heroo {
+            text-align: center;
+            padding: 40px 20px 20px;
+        }
 
-body ul li {
-    font-size: 20px;
-    margin: 0 12px;
-}
-body ul li a{
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-}
-.nav-bar{
-    padding-top: 0px;
-    
-}
-body ul li a:hover{
-    color: black;
-}
+        .heroo h1 {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            color: #ffffff;
+            margin: 0 0 16px;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
 
-.nav-bar {
-    padding-top: 0px ;
-}
-.heroo {
-    text-align: center;
+        .heroo p {
+            color: #f4b680;
+            font-size: 1.15rem;
+            margin: 0 0 24px;
+        }
 
-}
-.heroo h1 {
-    font-size: 80px;
-}
-.search-box {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-}
-.search-box input {
-    text-align: left;
-    width: 600px;
-    max-width: 100%;
-    height: 35px;
-    padding: 12px 20px;
-    border: 2px solid #1b1b1b;
-    border-radius: 30px;
-    font-size: 20px;
-    box-sizing:border-box;
-}
-.search-box button {
-    padding: 12px;
-    border: none;
-    border-radius: 30px;
-    background-color: #322a2a;
-    color: white;
-    cursor: pointer;
-    font-size: 15px;
+        .nav2 {
+            margin: 10px auto 30px;
+            display: flex;
+            justify-content: center;
+        }
 
-}
-.search-box button :hover{
-    background-color: #333333;
-}
-.nav2{
-    background-color: white;
-    color: black;
-    padding: 20px 40px;
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    align-items: center;
+        .nav2 ul {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+            margin: 0;
+            padding: 6px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 40px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
 
-}
-.nav2 ul1 {
-    display: flex;
-    gap: 40px;
-    list-style: none;
-    margin: 0;
-    padding: 0;
+        .nav2 ul li a {
+            display: block;
+            color: #2c3e50;
+            padding: 10px 24px;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 30px;
+            transition: all 0.25s ease;
+        }
 
-}
-.nav2 ul1 li {
-    text-decoration: none;
-    font-size: 18px;
-    font-weight: 500;
-    color: #333;
-    cursor: pointer;
-    padding: 10px 15px;
-    border-radius: 8px;
-}
-.nav2 ul1 li:hover {
-    background-color: #f0f0f0;
-}
-.nav2 ul1 li.active {
-    color: #0066cc;
-    border-bottom: 3px solid #0066cc;
-}
-.nav2 ul1 li a {
-    color: rgb(0, 0, 0);
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-}
-.hero33{
-    border-radius: 30px;
-    height: 500px;
-    width: 300px;
-    background-color: black;
-    background-image: url(hotelbg.jpg);
-    
-    width: auto;
-    margin-left:250px ;
-    margin-right: 250px;
-    padding: 300px; 
-    padding-bottom: 30px;
-    padding-top: 50px; 
-}
-.mate3 {
-    height: 200px;
-    text-align: center;
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    margin-bottom: 30px;
-}
+        .nav2 ul li a:hover,
+        .nav2 ul li a.active {
+            background-color: #2c3e50;
+            color: #ffffff;
+        }
+
+        .hero33 {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto 50px;
+            padding: 80px 24px;
+            border-radius: 28px;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url('hotelbg.jpg') no-repeat center center;
+            background-size: cover;
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+            text-align: center;
+        }
+
+        .hero33 h2 {
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            color: #ffffff;
+            margin: 0 0 24px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.6);
+        }
+
+        .search-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-box input {
+            flex: 1;
+            height: 52px;
+            padding: 12px 24px;
+            border: 2px solid #ffffff;
+            border-radius: 30px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            border-color: #f4b680;
+            box-shadow: 0 0 0 4px rgba(244, 182, 128, 0.3);
+        }
+
+        .search-box button {
+            height: 52px;
+            padding: 0 28px;
+            border: none;
+            border-radius: 30px;
+            background: #f4b680;
+            color: #1a1a1a;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .search-box button:hover {
+            background-color: #e89b5e;
+            transform: translateY(-2px);
+        }
+
+        .mate3 {
+            max-width: 1100px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.95);
+            color: #2c3e50;
+            padding: 32px 24px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-6px);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin: 0 0 10px;
+            color: #1a252f;
+        }
+
+        .feature-card p {
+            font-size: 0.95rem;
+            color: #666;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 700px) {
+            .search-box {
+                flex-direction: column;
+            }
+
+            .search-box input, .search-box button {
+                width: 100%;
+            }
+
+            .hero33 {
+                margin: 0 16px 40px;
+                padding: 50px 16px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -156,41 +186,53 @@ body ul li a:hover{
             <li><a href="expence.html">Budget Planner</a></li>
         </ul>
     </nav>
-        <div class="heroo">
-        <h1>Where To?</h1>
-        <div class="search-box">
-            <input type="search" placeholder="Search destinations, hotels, packages...">
-            <button>Search</button>
-        </div>
+
+    <div class="heroo">
+        <h1>Stay In Luxury</h1>
+        <p>Curated accommodations across 2M+ hotels worldwide</p>
     </div>
+
     <div class="nav2">
-        <ul1>
-            <li><a href="hotel.html">Hotels</a></li>
+        <ul>
+            <li><a href="hotel.html" class="active">Hotels</a></li>
             <li><a href="restraunts.html">Restaurants</a></li>
-        </ul1>
+        </ul>
     </div>
+
     <div class="hero33">
-        <div class="search-box" style="margin-top: 220px;">
-            <input type="search" placeholder="Search destinations, hotels, packages..." style="padding-right:90px ;">
-            <button>🔍</button>
-        </div>
+        <h2>Find Your Perfect Stay</h2>
+        <form class="search-box" onsubmit="handleHotelSearch(event)">
+            <input type="search" id="hotelInput" placeholder="Search city or hotel name..." required>
+            <button type="submit">Search Stays</button>
+        </form>
     </div>
+
     <div class="mate3">
-        <div class="matee1">
-            <h2>Backed by travellers</h2>
-            <p>Book confidently thanks to reviews from</p>
-            <p>travelers who have been there</p>
+        <div class="feature-card">
+            <div class="feature-icon">⭐</div>
+            <h3>Backed by Travelers</h3>
+            <p>Book with confidence thanks to honest, verified reviews and photos from real guests.</p>
         </div>
-        <div class="matee2">
-            <h2>Stays for every style</h2>
-            <p>Choose from more thsan two million hotels</p>
-            <p>with filters to find your perfect fit</p>
+        <div class="feature-card">
+            <div class="feature-icon">🏨</div>
+            <h3>Stays for Every Style</h3>
+            <p>Choose from more than two million hotels, boutique villas, and resorts with tailored filters.</p>
         </div>
-        <div class="matee3">
-            <h2>Best Rated around</h2>
-            <p>Compare prices from different sites</p>
-            <p>to book with the best deal</p>
+        <div class="feature-card">
+            <div class="feature-icon">💰</div>
+            <h3>Best Rate Guarantee</h3>
+            <p>Transparent pricing with no surprise charges. Calculate accommodation directly into your trip total.</p>
         </div>
     </div>
+
+    <script>
+        function handleHotelSearch(event) {
+            event.preventDefault();
+            const val = document.getElementById('hotelInput').value.trim();
+            if (val) {
+                window.location.href = `expence.html?to=${encodeURIComponent(val)}`;
+            }
+        }
+    </script>
 </body>
 </html>

@@ -3,67 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travels Agent</title>
+    <title>Travels Agent - Popular Destinations</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-        body {
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    background-size: cover;
-}
-body ul {
-    margin: 0;
-    padding: 0;
-    height: 60px;
-    overflow: hidden;
-    background-color: #333333;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: nowrap;
-    list-style: none;
-}
-body ul li {
-    font-size: 20px;
-    margin: 0 12px;
-}
-body ul li a{
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-}
-.nav-bar{
-    padding-top: 0px;
-    
-}
-body ul li a:hover{
-    color: black;
-}
-.locations{
-    background-color: rgb(255, 255, 255);
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-img{
-    display: flex;
-    justify-content: space-evenly;
-    margin: 60px;
-    width: 300px;
-    height: auto;
-}
-.location2 {
-    text-align: center;
-    margin-bottom: 100px;
-}
-.location1 {
-    text-align: center;
-}
-.location3 {
-    text-align: center;
-}
+        .page-title {
+            text-align: center;
+            padding: 40px 20px 10px;
+        }
+
+        .page-title h1 {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            color: #ffffff;
+            margin: 0 0 10px;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .page-title p {
+            font-size: 1.15rem;
+            color: #f4b680;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .destinations-grid {
+            max-width: 1200px;
+            margin: 30px auto 60px;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: #ffffff;
+            color: #2c3e50;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-img-wrapper {
+            position: relative;
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+        }
+
+        .card-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .card:hover .card-img-wrapper img {
+            transform: scale(1.08);
+        }
+
+        .badge {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: #e74c3c;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 10px rgba(231, 76, 60, 0.4);
+        }
+
+        .badge.popular {
+            background: #27ae60;
+        }
+
+        .card-content {
+            padding: 24px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-content h3 {
+            font-size: 1.5rem;
+            margin: 0 0 8px;
+            color: #1a252f;
+        }
+
+        .card-price {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #0088cc;
+            margin: 4px 0 10px;
+        }
+
+        .card-content p {
+            color: #666;
+            font-size: 0.95rem;
+            margin: 0 0 20px;
+            line-height: 1.4;
+        }
+
+        .btn-book {
+            display: inline-block;
+            text-align: center;
+            background: linear-gradient(135deg, #f4b680, #e89b5e);
+            color: #1a252f;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 12px rgba(244, 182, 128, 0.4);
+        }
+
+        .btn-book:hover {
+            background: linear-gradient(135deg, #e89b5e, #d88344);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(244, 182, 128, 0.5);
+        }
     </style>
 </head>
 <body>
@@ -71,26 +141,76 @@ img{
         <ul>
             <li><a href="index.html">Home</a></li>
             <li><a href="makeyourtrip.html">Make Your Trip</a></li>
-            <li><a href="populardestinations.html">Popular Destinations</a></li>
+            <li><a href="populardestinations.html" class="active">Popular Destinations</a></li>
             <li><a href="expence.html">Budget Planner</a></li>
         </ul>
     </nav>
-    <div class="locations">
-        <div class="location1">
-            <img src="DUBAI.jpg" alt="dubai">
-             <h3>DUBAI</h3><p>$4199 BESTSELLER..!</p><p>14 Nights in Dubai</p>
-             <button>Make It Yours</button>
+
+    <div class="page-title">
+        <h1>Handpicked Getaways</h1>
+        <p>Choose your dream escape and calculate your real-time travel budget</p>
+    </div>
+
+    <div class="destinations-grid">
+        <div class="card">
+            <div class="card-img-wrapper">
+                <img src="DUBAI.jpg" alt="Dubai">
+                <span class="badge">Bestseller</span>
+            </div>
+            <div class="card-content">
+                <div>
+                    <h3>Dubai, UAE</h3>
+                    <div class="card-price">$4,199 / package</div>
+                    <p>14 Nights luxury stay with Burj Khalifa & desert safari tours included.</p>
+                </div>
+                <a href="expence.html?to=Dubai" class="btn-book">Plan This Trip</a>
+            </div>
         </div>
-        <div class="location2">
-            <img src="SINGAPORE.png" alt="singapore">
-            <h3>SINGAPORE</h3><p>$1200 INCLUDES - Hotel , Buffet </p>
+
+        <div class="card">
+            <div class="card-img-wrapper">
+                <img src="SINGAPORE.png" alt="Singapore">
+                <span class="badge popular">Featured</span>
+            </div>
+            <div class="card-content">
+                <div>
+                    <h3>Singapore</h3>
+                    <div class="card-price">$1,200 / package</div>
+                    <p>Includes premium hotel, daily buffet breakfast & Marina Bay Sands access.</p>
+                </div>
+                <a href="expence.html?to=Singapore" class="btn-book">Plan This Trip</a>
+            </div>
         </div>
-        <div class="location3">
-            <img src="GOA.png" alt="goa">
-            <h3>GOA</h3><p>$4599 BESTSELLER..!</p><p>7 Nights in GOA</p>
-             <button>Make It Yours</button>
+
+        <div class="card">
+            <div class="card-img-wrapper">
+                <img src="GOA.png" alt="Goa">
+                <span class="badge">Bestseller</span>
+            </div>
+            <div class="card-content">
+                <div>
+                    <h3>Goa, India</h3>
+                    <div class="card-price">$4,599 / package</div>
+                    <p>7 Nights in coastal resort, watersports pass & vibrant nightlife tours.</p>
+                </div>
+                <a href="expence.html?to=Goa" class="btn-book">Plan This Trip</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-img-wrapper">
+                <img src="KASHMIR.png" alt="Kashmir">
+                <span class="badge popular">Trending</span>
+            </div>
+            <div class="card-content">
+                <div>
+                    <h3>Kashmir, India</h3>
+                    <div class="card-price">$2,199 / package</div>
+                    <p>6 Nights in luxury Dal Lake houseboats, Gulmarg gondola ride & valleys.</p>
+                </div>
+                <a href="expence.html?to=Kashmir" class="btn-book">Plan This Trip</a>
+            </div>
         </div>
     </div>
-    
 </body>
 </html>
