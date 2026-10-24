@@ -138,6 +138,9 @@
             font-weight: 600;
             color: #2c3e50;
             margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .destination-search {
@@ -150,14 +153,14 @@
         .passengers-input,
         .form-group select {
             width: 100%;
-            height: 50px;
-            padding: 12px 15px;
+            height: 52px;
+            padding: 12px 16px;
             border: 2px solid #e8e8e8;
             border-radius: 10px;
             background-color: #fcfcfc;
-            font-size: 1rem;
+            font-size: 0.98rem;
             font-family: inherit;
-            transition: border-color 0.2s ease;
+            transition: all 0.2s ease;
         }
 
         .destination-search input {
@@ -171,6 +174,7 @@
             outline: none;
             border-color: #f4b680;
             background-color: white;
+            box-shadow: 0 0 0 3px rgba(244, 182, 128, 0.25);
         }
 
         .suggestions {
@@ -179,23 +183,72 @@
             background: white;
             border: 2px solid #e8e8e8;
             border-top: none;
-            max-height: 250px;
+            max-height: 300px;
             overflow-y: auto;
-            border-radius: 0 0 10px 10px;
-            z-index: 50;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border-radius: 0 0 12px 12px;
+            z-index: 100;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.18);
         }
 
-        .suggestion-item {
-            padding: 12px 15px;
+        .airport-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
             cursor: pointer;
-            border-bottom: 1px solid #f0f0f0;
-            font-size: 0.9rem;
+            border-bottom: 1px solid #f2f2f2;
+            transition: all 0.2s ease;
         }
 
-        .suggestion-item:hover {
+        .airport-item:hover {
             background: #fff5e6;
-            color: #d88344;
+            padding-left: 20px;
+        }
+
+        .airport-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-align: left;
+        }
+
+        .airport-icon {
+            font-size: 1.25rem;
+            color: #f4b680;
+        }
+
+        .airport-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .airport-sub {
+            font-size: 0.82rem;
+            color: #777;
+            margin-top: 2px;
+        }
+
+        .airport-badge {
+            background: #2c3e50;
+            color: #f4b680;
+            font-weight: 700;
+            font-size: 0.85rem;
+            padding: 4px 10px;
+            border-radius: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .airport-item:hover .airport-badge {
+            background: #e89b5e;
+            color: white;
+        }
+
+        .airport-empty {
+            padding: 16px;
+            text-align: center;
+            color: #888;
+            font-size: 0.9rem;
         }
 
         .clear {
@@ -394,7 +447,7 @@
 
     <header class="page-header">
         <h1>Travel Budget Planner</h1>
-        <p>Real-time live flight rates, accommodation, dining, and route estimates</p>
+        <p>Live flight rates between verified airports worldwide</p>
     </header>
 
     <main class="container">
@@ -421,14 +474,14 @@
             <form id="budgetForm">
                 <div class="form-section">
                     <div class="form-group">
-                        <label for="fromCity">From (Origin City / Airport)</label>
+                        <label for="fromCity">✈️ Departure Airport (From)</label>
                         <div class="destination-search">
                             <input
                                 type="text"
                                 id="fromCity"
                                 class="destinationInput"
                                 data-suggestions-id="suggestionsFrom"
-                                placeholder="E.g. New Delhi, London, New York"
+                                placeholder="Search departure airport (e.g. Delhi, Hyderabad, DEL)"
                                 autocomplete="off"
                                 required
                             >
@@ -438,14 +491,14 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="toCity">To (Destination City / Airport)</label>
+                        <label for="toCity">🛬 Destination Airport (To)</label>
                         <div class="destination-search">
                             <input
                                 type="text"
                                 id="toCity"
                                 class="destinationInput"
                                 data-suggestions-id="suggestionsTo"
-                                placeholder="E.g. Dubai, Singapore, Goa"
+                                placeholder="Search arrival airport (e.g. Dubai, Goa, DXB)"
                                 autocomplete="off"
                                 required
                             >
@@ -457,7 +510,7 @@
 
                 <div class="form-section">
                     <div class="form-group">
-                        <label for="dateRange">Travel Dates (Departure to Return)</label>
+                        <label for="dateRange">📅 Travel Dates (Departure to Return)</label>
                         <input
                             type="text"
                             id="dateRange"
@@ -468,7 +521,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="passengers">Number of Travelers</label>
+                        <label for="passengers">👥 Number of Travelers</label>
                         <input
                             type="number"
                             id="passengers"
@@ -484,7 +537,7 @@
 
                 <div class="form-section">
                     <div class="form-group">
-                        <label for="hotelType">Hotel Rating</label>
+                        <label for="hotelType">🏨 Hotel Rating</label>
                         <select id="hotelType">
                             <option value="3">3 Star Standard ($70 / night)</option>
                             <option value="4" selected>4 Star Premium ($120 / night)</option>
@@ -493,7 +546,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="foodType">Dining Preference</label>
+                        <label for="foodType">🍽️ Dining Preference</label>
                         <select id="foodType">
                             <option value="20">Budget & Street Food ($20 / day)</option>
                             <option value="40" selected>Standard Dining ($40 / day)</option>
@@ -515,6 +568,8 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <script>
+        const apiBase = window.location.origin.startsWith('http') ? window.location.origin : 'http://localhost:6001';
+
         async function getFlightPrice(origin, destination, departureDate, returnDate, travelers) {
             const params = new URLSearchParams({
                 origin,
@@ -527,7 +582,6 @@
                 params.set("returnDate", returnDate);
             }
 
-            const apiBase = window.location.origin.startsWith('http') ? window.location.origin : 'http://localhost:6001';
             const response = await fetch(`${apiBase}/api/flight-price?${params}`);
             const data = await response.json();
 
@@ -549,49 +603,80 @@
             return 100;
         }
 
-        function initDestinationAutocomplete(container) {
+        function initAirportAutocomplete(container) {
             const input = container.querySelector('.destinationInput');
             const suggestions = document.getElementById(input.dataset.suggestionsId);
             const clearButton = container.querySelector('.clear');
 
-            async function updateSuggestions() {
-                const value = input.value.trim();
-                suggestions.innerHTML = '';
+            let debounceTimer = null;
 
-                if (value.length < 2) return;
-
+            async function fetchAirports(query) {
                 try {
-                    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(value)}&format=json&limit=5`;
-                    const response = await fetch(url);
-                    const results = await response.json();
-
-                    results.forEach((item) => {
-                        const suggestion = document.createElement('div');
-                        suggestion.classList.add('suggestion-item');
-                        suggestion.innerText = item.display_name;
-
-                        suggestion.addEventListener('click', () => {
-                            input.value = item.display_name;
-                            suggestions.innerHTML = '';
-                            clearButton.style.display = input.value ? 'block' : 'none';
-                            updateSummary();
-                        });
-
-                        suggestions.appendChild(suggestion);
-                    });
-                } catch (error) {
-                    console.error('Suggestion fetch failed:', error);
+                    const res = await fetch(`${apiBase}/api/airports?q=${encodeURIComponent(query)}`);
+                    const data = await res.json();
+                    return data.airports || [];
+                } catch (err) {
+                    console.error("Airport fetch failed:", err);
+                    return [];
                 }
             }
 
+            function renderAirports(airports) {
+                suggestions.innerHTML = '';
+
+                if (!airports || airports.length === 0) {
+                    suggestions.innerHTML = '<div class="airport-empty">No matching commercial airports found.</div>';
+                    return;
+                }
+
+                airports.forEach((airport) => {
+                    const item = document.createElement('div');
+                    item.className = 'airport-item';
+
+                    item.innerHTML = `
+                        <div class="airport-info">
+                            <span class="airport-icon">✈️</span>
+                            <div>
+                                <div class="airport-name">${airport.name}</div>
+                                <div class="airport-sub">${airport.city}${airport.country ? ', ' + airport.country : ''}</div>
+                            </div>
+                        </div>
+                        <span class="airport-badge">${airport.code}</span>
+                    `;
+
+                    item.addEventListener('click', () => {
+                        input.value = `${airport.name} (${airport.code})`;
+                        input.dataset.iata = airport.code;
+                        suggestions.innerHTML = '';
+                        clearButton.style.display = 'block';
+                        updateSummary();
+                    });
+
+                    suggestions.appendChild(item);
+                });
+            }
+
+            input.addEventListener('focus', async () => {
+                const val = input.value.trim();
+                const airports = await fetchAirports(val);
+                renderAirports(airports);
+            });
+
             input.addEventListener('input', () => {
                 clearButton.style.display = input.value.length > 0 ? 'block' : 'none';
-                updateSuggestions();
+
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(async () => {
+                    const val = input.value.trim();
+                    const airports = await fetchAirports(val);
+                    renderAirports(airports);
+                }, 150);
             });
 
             clearButton.addEventListener('click', (event) => {
                 event.preventDefault();
                 input.value = '';
+                input.dataset.iata = '';
                 suggestions.innerHTML = '';
                 clearButton.style.display = 'none';
                 input.focus();
@@ -605,6 +690,13 @@
             });
         }
 
+        function extractRouteBadge(val) {
+            if (!val) return '';
+            const match = val.match(/\(([A-Za-z]{3})\)/);
+            if (match) return match[1];
+            return val.split(',')[0].trim();
+        }
+
         function updateSummary() {
             const travelers = document.getElementById('passengers').value || '1';
             const from = document.getElementById('fromCity').value;
@@ -612,8 +704,11 @@
             const dateRange = document.getElementById('dateRange').value;
 
             document.getElementById('totalTravelers').textContent = travelers;
+
+            const fromCode = extractRouteBadge(from);
+            const toCode = extractRouteBadge(to);
             document.getElementById('routeDisplay').textContent =
-                from && to ? `${from.split(',')[0]} → ${to.split(',')[0]}` : '-';
+                fromCode && toCode ? `${fromCode} → ${toCode}` : '-';
 
             if (!dateRange) {
                 document.getElementById('tripDuration').textContent = '-';
@@ -636,7 +731,7 @@
             document.getElementById('resultBox').innerHTML = html;
         }
 
-        document.querySelectorAll('.destination-search').forEach(initDestinationAutocomplete);
+        document.querySelectorAll('.destination-search').forEach(initAirportAutocomplete);
 
         flatpickr('#dateRange', {
             mode: 'range',
@@ -667,7 +762,7 @@
             const foodRate = Number.parseFloat(document.getElementById('foodType').value);
 
             if (!from || !to || !dateRange || travelers < 1) {
-                showResult('<div style="color:#b00020; font-weight:700; padding:15px; text-align:center;">Please fill all journey details.</div>');
+                showResult('<div style="color:#b00020; font-weight:700; padding:15px; text-align:center;">Please fill all airport and date details.</div>');
                 return;
             }
 
@@ -681,12 +776,15 @@
             const end = new Date(dates[1]);
             const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
 
+            const fromBadge = extractRouteBadge(from);
+            const toBadge = extractRouteBadge(to);
+
             showResult(`
                 <div style="text-align: center; padding: 25px;">
                     <div style="font-size: 1.2rem; color: #2c3e50; font-weight: 600; margin-bottom: 8px;">
-                        ✈️ Searching live flight prices & estimating trip budget...
+                        ✈️ Searching live flight prices via Google Flights...
                     </div>
-                    <div style="color: #666; font-size: 0.95rem;">Checking SerpApi Google Flights engine for routes between ${from.split(',')[0]} and ${to.split(',')[0]}...</div>
+                    <div style="color: #666; font-size: 0.95rem;">Checking SerpApi for flights from ${fromBadge} to ${toBadge}...</div>
                 </div>
             `);
 
@@ -701,7 +799,6 @@
             } catch (flightErr) {
                 console.warn("Live flight lookup failed, using estimated route baseline:", flightErr.message);
                 const distanceKm = await getDistance(from, to);
-                // Baseline fallback calculation
                 flightCost = (250 + (distanceKm * 0.12)) * travelers;
                 flightNoticeHtml = `
                     <div class="flight-notice">
@@ -729,8 +826,8 @@
                     </div>
 
                     <div class="report-grid">
-                        <div class="report-grid-item"><strong>From:</strong> ${from.split(',')[0]}</div>
-                        <div class="report-grid-item"><strong>To:</strong> ${to.split(',')[0]}</div>
+                        <div class="report-grid-item"><strong>Departure Airport:</strong> ${from}</div>
+                        <div class="report-grid-item"><strong>Arrival Airport:</strong> ${to}</div>
                         <div class="report-grid-item"><strong>Duration:</strong> ${days} Days (${dateRange})</div>
                         <div class="report-grid-item"><strong>Travelers:</strong> ${travelers} Person(s)</div>
                     </div>
@@ -740,8 +837,8 @@
                     <div class="report-breakdown">
                         <div class="breakdown-row">
                             <span>
-                                Flights (${travelers} travelers)
-                                ${isLiveFlight ? '<span class="flight-badge">Live SerpApi Rate</span>' : '<span class="flight-badge" style="background:#f39c12;">Estimated</span>'}
+                                Flights (${travelers} travelers: ${fromBadge} ⇄ ${toBadge})
+                                ${isLiveFlight ? '<span class="flight-badge">Live Google Flights Rate</span>' : '<span class="flight-badge" style="background:#f39c12;">Estimated</span>'}
                             </span>
                             <strong>$${flightCost.toFixed(2)}</strong>
                         </div>
@@ -754,11 +851,11 @@
                             <strong>$${foodCost.toFixed(2)}</strong>
                         </div>
                         <div class="breakdown-row">
-                            <span>Local Transfers & Route Transport</span>
+                            <span>Local Airport Transfers & Transport</span>
                             <strong>$${transportCost.toFixed(2)}</strong>
                         </div>
                         <div class="breakdown-row">
-                            <span>Taxes & Tourism Surcharges (10%)</span>
+                            <span>Taxes & Surcharges (10%)</span>
                             <strong>$${tax.toFixed(2)}</strong>
                         </div>
                         <div class="breakdown-row total">
@@ -772,14 +869,26 @@
             updateSummary();
         });
 
-        // Auto-fill destination if passed via URL (e.g., from Popular Destinations or Search)
-        window.addEventListener('DOMContentLoaded', () => {
+        // Auto-fill destination if passed via URL parameter (e.g. from Popular Destinations or Search)
+        window.addEventListener('DOMContentLoaded', async () => {
             const urlParams = new URLSearchParams(window.location.search);
             const toParam = urlParams.get('to');
             if (toParam) {
                 const toInput = document.getElementById('toCity');
                 if (toInput) {
-                    toInput.value = toParam;
+                    try {
+                        const res = await fetch(`${apiBase}/api/airports?q=${encodeURIComponent(toParam)}`);
+                        const data = await res.json();
+                        if (data.airports && data.airports.length > 0) {
+                            const ap = data.airports[0];
+                            toInput.value = `${ap.name} (${ap.code})`;
+                            toInput.dataset.iata = ap.code;
+                        } else {
+                            toInput.value = toParam;
+                        }
+                    } catch (e) {
+                        toInput.value = toParam;
+                    }
                     const clearBtn = toInput.closest('.destination-search')?.querySelector('.clear');
                     if (clearBtn) clearBtn.style.display = 'block';
                     updateSummary();
