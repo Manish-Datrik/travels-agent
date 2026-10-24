@@ -474,7 +474,7 @@
             <form id="budgetForm">
                 <div class="form-section">
                     <div class="form-group">
-                        <label for="fromCity">✈️ Departure Airport (From)</label>
+                        <label for="fromCity">Departure Airport (From)</label>
                         <div class="destination-search">
                             <input
                                 type="text"
@@ -491,7 +491,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="toCity">🛬 Destination Airport (To)</label>
+                        <label for="toCity">Destination Airport (To)</label>
                         <div class="destination-search">
                             <input
                                 type="text"
@@ -510,7 +510,7 @@
 
                 <div class="form-section">
                     <div class="form-group">
-                        <label for="dateRange">📅 Travel Dates (Departure to Return)</label>
+                        <label for="dateRange">Travel Dates (Departure to Return)</label>
                         <input
                             type="text"
                             id="dateRange"
@@ -521,7 +521,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="passengers">👥 Number of Travelers</label>
+                        <label for="passengers">Number of Travelers</label>
                         <input
                             type="number"
                             id="passengers"
@@ -537,7 +537,7 @@
 
                 <div class="form-section">
                     <div class="form-group">
-                        <label for="hotelType">🏨 Hotel Rating</label>
+                        <label for="hotelType">Hotel Rating</label>
                         <select id="hotelType">
                             <option value="3">3 Star Standard ($70 / night)</option>
                             <option value="4" selected>4 Star Premium ($120 / night)</option>
@@ -546,7 +546,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="foodType">🍽️ Dining Preference</label>
+                        <label for="foodType">Dining Preference</label>
                         <select id="foodType">
                             <option value="20">Budget & Street Food ($20 / day)</option>
                             <option value="40" selected>Standard Dining ($40 / day)</option>
@@ -635,7 +635,6 @@
 
                     item.innerHTML = `
                         <div class="airport-info">
-                            <span class="airport-icon">✈️</span>
                             <div>
                                 <div class="airport-name">${airport.name}</div>
                                 <div class="airport-sub">${airport.city}${airport.country ? ', ' + airport.country : ''}</div>
@@ -782,7 +781,7 @@
             showResult(`
                 <div style="text-align: center; padding: 25px;">
                     <div style="font-size: 1.2rem; color: #2c3e50; font-weight: 600; margin-bottom: 8px;">
-                        ✈️ Searching live flight prices via Google Flights...
+                        Searching live flight prices via Google Flights...
                     </div>
                     <div style="color: #666; font-size: 0.95rem;">Checking SerpApi for flights from ${fromBadge} to ${toBadge}...</div>
                 </div>
@@ -802,7 +801,7 @@
                 flightCost = (250 + (distanceKm * 0.12)) * travelers;
                 flightNoticeHtml = `
                     <div class="flight-notice">
-                        ℹ️ <strong>Flight Note:</strong> Live flight search returned: "${flightErr.message}". 
+                        <strong>Flight Note:</strong> Live flight search returned: "${flightErr.message}". 
                         Using estimated round-trip route pricing ($${flightCost.toFixed(2)}) based on distance.
                     </div>
                 `;
@@ -837,13 +836,13 @@
                     <div class="report-breakdown">
                         <div class="breakdown-row">
                             <span>
-                                Flights (${travelers} travelers: ${fromBadge} ⇄ ${toBadge})
+                                Flights (${travelers} travelers: ${fromBadge} to ${toBadge})
                                 ${isLiveFlight ? '<span class="flight-badge">Live Google Flights Rate</span>' : '<span class="flight-badge" style="background:#f39c12;">Estimated</span>'}
                             </span>
                             <strong>$${flightCost.toFixed(2)}</strong>
                         </div>
                         <div class="breakdown-row">
-                            <span>Hotel Accommodation (${hotelType}★ for ${days} nights)</span>
+                            <span>Hotel Accommodation (${hotelType}-Star for ${days} nights)</span>
                             <strong>$${hotelCost.toFixed(2)}</strong>
                         </div>
                         <div class="breakdown-row">
