@@ -568,7 +568,20 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <script>
-        const apiBase = window.location.origin.startsWith('http') ? window.location.origin : 'http://localhost:6003';
+        const isLocalServer = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+        const apiBase = isLocalServer ? window.location.origin : null;
+        let airportDataPromise;
+
+        async function loadAirportData() {
+            if (!airportDataPromise) {
+                airportDataPromise = fetch('./airports.json')
+                    .then((response) => {
+                        if (!response.ok) throw new Error('Could not load airports.json');
+                        return response.json();
+                    });
+            }
+            return airportDataPromise;
+        }
 
         async function getFlightPrice(origin, destination, departureDate, returnDate, travelers) {
             const params = new URLSearchParams({
@@ -580,6 +593,10 @@
 
             if (returnDate) {
                 params.set("returnDate", returnDate);
+            }
+
+            if (!apiBase) {
+                throw new Error('Live flight prices need a backend server. Using an estimated flight price on GitHub Pages.');
             }
 
             const response = await fetch(`${apiBase}/api/flight-price?${params}`);
@@ -612,11 +629,19 @@
 
             async function fetchAirports(query) {
                 try {
-                    const res = await fetch(`${apiBase}/api/airports?q=${encodeURIComponent(query)}`);
-                    const data = await res.json();
-                    return data.airports || [];
+                    const airports = await loadAirportData();
+                    const term = query.trim().toLowerCase();
+
+                    if (!term) return airports.slice(0, 8);
+
+                    return airports.filter((airport) =>
+                        airport.code.toLowerCase().includes(term) ||
+                        airport.name.toLowerCase().includes(term) ||
+                        airport.city.toLowerCase().includes(term) ||
+                        airport.country.toLowerCase().includes(term)
+                    ).slice(0, 8);
                 } catch (err) {
-                    console.error("Airport fetch failed:", err);
+                    console.error("Airport data failed to load:", err);
                     return [];
                 }
             }
@@ -876,10 +901,16 @@
                 const toInput = document.getElementById('toCity');
                 if (toInput) {
                     try {
-                        const res = await fetch(`${apiBase}/api/airports?q=${encodeURIComponent(toParam)}`);
-                        const data = await res.json();
-                        if (data.airports && data.airports.length > 0) {
-                            const ap = data.airports[0];
+                        const airports = await loadAirportData();
+                        const term = toParam.trim().toLowerCase();
+                        const ap = airports.find((airport) =>
+                            airport.code.toLowerCase() === term ||
+                            airport.city.toLowerCase() === term ||
+                            airport.name.toLowerCase().includes(term) ||
+                            airport.city.toLowerCase().includes(term)
+                        );
+
+                        if (ap) {
                             toInput.value = `${ap.name} (${ap.code})`;
                             toInput.dataset.iata = ap.code;
                         } else {
