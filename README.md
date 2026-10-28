@@ -17,20 +17,19 @@ the application allows users to:
 - select food preference (budget, standard, or luxury)
 - get real-time flight prices from the serpapi flight search api
 - view a complete expense breakdown including flights, hotels, food, and transport
-- save expense data to a mongodb database
+- view a complete trip budget breakdown
 
 ### Frontend
 html5 for structure
 css3 for styling with modern gradients and responsive design
 javascript (vanilla) for interactive features
 flatpickr library for date range selection
-nominatim api for location autocomplete
+airport autocomplete with verified airport data
 
 ### Backend
 node.js with express framework
-mongodb with mongoose for data persistence
 cors middleware for handling cross-origin requests
-dotenv for environment configuration
+dotenv for private environment configuration
 serpapi integration for real-time flight pricing
 
 
@@ -54,29 +53,33 @@ the app calculates trip costs using:
 - a 10 percent tax on the subtotal
 
 ### Requirements
-node.js (version 24 or higher)
-mongodb instance running locally or remotely
-npm or yarn package manager
+Node.js 20 or higher and npm.
 
 ### Environment setup
-create a .env file in the project root and add:
+For local development, copy `.env.example` to `.env` and add your private SerpApi key:
 ```
 SERPAPI_KEY=your_private_api_key_here
-MONGODB_URI=your_mongodb_connection_string_here
-PORT=6001
 ```
 
-if you are using a local mongodb instance, the uri may look like:
-```
-MONGODB_URI=mongodb://127.0.0.1:27017/travelagent
-```
+Never put API keys in HTML, frontend JavaScript, or a committed file. `.env` is ignored by Git; `.env.example` contains placeholders only.
+
+## Deploy live flight pricing
+
+GitHub Pages hosts the static website but cannot run the Express API. The API is configured to run separately on Render using the Blueprint in `render.yaml`.
+
+1. In Render, create a Blueprint from this repository and deploy the branch used for the app.
+2. Set `SERPAPI_KEY` in the Render service's environment settings. Do not enter it into GitHub Pages or the HTML.
+3. The frontend is configured for `https://travels-agent-api.onrender.com`. If Render assigns a different service URL, update the `travel-agent-api-url` meta tag in `expence.html` to that public URL and publish the page.
+4. Confirm the Render service's `/api/health` endpoint succeeds, then try a flight search on the GitHub Pages site.
+
+The backend permits requests from the GitHub Pages origin and local development by default. Change `ALLOWED_ORIGINS` in Render if the site uses a different domain. Flight searches are limited to 10 requests per minute per client IP. The Render free service may take a short time to wake up before answering the first request.
 
 ## Features Implemented
 
 location autocomplete using nominatim open street map data
 real-time flight pricing from serpapi api
 responsive design that works on mobile, tablet, and desktop
-expense data persistence with mongodb
+server-side flight API integration
 clean navigation across all pages
 budget summary cards showing trip details
 professional styling with gradients and smooth transitions
@@ -93,11 +96,9 @@ error handling for api failures with fallback prices
 6 choose your preferred hotel type
 7 select your food preference
 8 click calculate to see the full expense breakdown
-9 your trip will be saved automatically to the database
-
 ## Notes
 
 the application uses real-time flight data from the serpapi api so prices reflect current market rates
 the api key is kept private on the backend to ensure security
-all expense data is stored permanently in the database for future reference
+flight prices are fetched by the server, which keeps the API key out of the browser
 the app is optimized for both desktop and mobile viewing
