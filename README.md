@@ -1,7 +1,7 @@
 # Travels Agent
 
 a travel planning application that helps users calculate trip expenses and find flight prices
-https://manish-datrik.github.io/travels-agent/
+[https://manish-datrik.github.io/travels-agent/](https://travels-agent-api.onrender.com)
 
 ## Overview
 
