@@ -56,12 +56,12 @@ the app calculates trip costs using:
 Node.js 20 or higher and npm.
 
 ### Environment setup
-For local development, copy `.env.example` to `.env` and add your private SerpApi key:
+For local development, create a `.env` file and add your private SerpApi key:
 ```
 SERPAPI_KEY=your_private_api_key_here
 ```
 
-Never put API keys in HTML, frontend JavaScript, or a committed file. `.env` is ignored by Git; `.env.example` contains placeholders only.
+Never put API keys in HTML, frontend JavaScript, or a committed file. All `.env` files, including examples, are ignored by Git.
 
 ## Deploy live flight pricing
 
