@@ -1,8 +1,8 @@
 # Travels Agent
 
 a travel planning application that helps users calculate trip expenses and find flight prices
-[https://manish-datrik.github.io/travels-agent/](https://travels-agent-api.onrender.com)
-
+Website: https://travels-agent.onrender.com
+Backend API: https://travels-agent-api.onrender.com
 ## Overview
 
 travels agent is a full-stack web application designed to help travelers plan their trips by calculating total expenses including flights, hotels, food, and transport costs. the app provides a user-friendly interface for entering trip details and displays a comprehensive budget breakdown
