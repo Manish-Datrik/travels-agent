@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="travel-agent-api-url" content="">
     <title>Travels Agent - Budget Planner</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -569,7 +570,8 @@
 
     <script>
         const isLocalServer = ['localhost', '127.0.0.1'].includes(window.location.hostname);
-        const apiBase = isLocalServer ? window.location.origin : null;
+        const configuredApiBase = document.querySelector('meta[name="travel-agent-api-url"]')?.content.trim();
+        const apiBase = (configuredApiBase || (isLocalServer ? window.location.origin : '')).replace(/\/+$/, '');
         let airportDataPromise;
 
         async function loadAirportData() {
@@ -596,7 +598,7 @@
             }
 
             if (!apiBase) {
-                throw new Error('Live flight prices need a backend server. Using an estimated flight price on GitHub Pages.');
+                throw new Error('Live flight pricing is not configured. Set the travel-agent-api-url meta value in expence.html to your backend URL.');
             }
 
             const response = await fetch(`${apiBase}/api/flight-price?${params}`);

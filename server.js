@@ -1,12 +1,21 @@
 const express = require("express");
 const path = require("path");
 const cors = require("cors");
+const { rateLimit } = require("express-rate-limit");
 require("dotenv").config();
 
 const app = express();
 const port = Number(process.env.PORT) || 6003;
+const allowedOrigins = (
+    process.env.ALLOWED_ORIGINS ||
+    "https://manish-datrik.github.io,http://localhost:6003,http://127.0.0.1:6003"
+)
+    .split(",")
+    .map(origin => origin.trim())
+    .filter(Boolean);
 
-app.use(cors());
+app.set("trust proxy", 1);
+app.use(cors({ origin: allowedOrigins }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname)));
@@ -308,6 +317,17 @@ app.get("/api/airports", async (req, res) => {
         return res.status(500).json({ success: false, error: err.message });
     }
 });
+
+app.use("/api/flight-price", rateLimit({
+    windowMs: 60 * 1000,
+    limit: 10,
+    standardHeaders: "draft-8",
+    legacyHeaders: false,
+    message: {
+        success: false,
+        error: "Too many flight searches. Please try again in a minute."
+    }
+}));
 
 app.get("/api/flight-price", async (req, res) => {
     try {
