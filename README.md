@@ -1,104 +1,127 @@
 # Travels Agent
 
-a travel planning application that helps users calculate trip expenses and find flight prices
-https://manish-datrik.github.io/travels-agent/
+Full-stack travel planning application that calculates comprehensive trip budgets and retrieves real-time flight rates powered by Google Flights and SerpApi.
+
+Migrated to a unified, production-ready Vercel single-domain architecture (static frontend edge delivery + Express serverless API backend).
+
+---
 
 ## Overview
 
-Travels Agent is a web application designed to help travelers plan trips by calculating expenses for flights, hotels, food, and transport.
+Travels Agent is a full-stack web application designed to help travelers plan trips by accurately calculating expenses for flights, hotels, food, and transport in real time.
 
 ### Main Features
+- **Smart Airport Autocomplete**: Instant search across 40+ popular global airports and live Google Flights autocomplete via SerpApi.
+- **Interactive Calendar**: Range date picker powered by Flatpickr for departure and return selection.
+- **Real-Time Flight Search**: Live round-trip and one-way flight pricing via SerpApi Google Flights engine with passenger count scaling.
+- **Accurate Expense Calculations**:
+  - Live priced flights (or fallback route estimates)
+  - Accommodations based on star rating (3-star standard: $70/night, 4-star premium: $120/night, 5-star luxury: $190/night)
+  - Dining preferences (Budget: $20/day, Standard: $40/day, Fine Dining: $70/day)
+  - Ground transportation based on route distance ($0.40 / km)
+  - Standard tax rate (10%) on subtotal
+- **Destination Discovery**: Handpicked getaways to Dubai, Singapore, Goa, and Kashmir.
+- **Hotels & Restaurants**: Dedicated exploration sections linking directly to the budget calculator.
 
-the application allows users to:
-- enter their origin and destination cities using location autocomplete
-- select travel dates using an interactive calendar
-- specify the number of travelers
-- choose hotel type (3-star, 4-star, or 5-star)
-- select food preference (budget, standard, or luxury)
-- get real-time flight prices from the serpapi flight search api
-- view a complete expense breakdown including flights, hotels, food, and transport
+---
 
-### Frontend
-html5 for structure
-css3 for styling with modern gradients and responsive design
-javascript (vanilla) for interactive features
-flatpickr library for date range selection
-nominatim api for location autocomplete
+## Project Structure
 
-### Backend
-node.js with express framework
-cors middleware for handling cross-origin requests
-dotenv for environment configuration
-serpapi integration for real-time flight pricing
+```
+Travel-Agent/
+│
+├── public/                     # Static frontend files served directly by Vercel / Express
+│   ├── index.html              # Homepage
+│   ├── expence.html            # Travel Budget Planner with live Google Flights pricing
+│   ├── expense.html            # Compatibility alias for budget planner
+│   ├── hotel.html              # Hotel accommodations showcase & search
+│   ├── restraunts.html         # Dining and culinary experiences
+│   ├── restaurants.html        # Compatibility alias for restaurants
+│   ├── makeyourtrip.html       # "Where To" journey planner
+│   ├── populardestinations.html# Handpicked getaways (Dubai, Singapore, Goa, Kashmir)
+│   ├── airports.json           # Global commercial airport dataset for autocomplete
+│   ├── style.css               # Core design and styling
+│   └── *.jpg, *.png, *.webp    # High-resolution destination and UI assets
+│
+├── api/
+│   └── index.js                # Vercel serverless function entry point
+├── server.js                   # Express application (API routes + local static file server)
+├── vercel.json                 # Vercel single-domain routing & rewrites configuration
+├── package.json                # Project dependencies, scripts & engine specification
+├── package-lock.json           # Dependency lockfile
+├── .env.example                # Example environment variable template (no secrets)
+├── .gitignore                  # Git ignore rules protecting secrets and local builds
+└── README.md                   # Documentation and deployment guide
+```
 
+---
 
-### Flight Price Lookup
-
-when a user enters their travel details and clicks calculate, the app:
-- sends the origin, destination, and departure date to the backend
-- the backend calls the serpapi flight search api with your private api key
-- parses the response to extract the best flight price
-- returns the price to the frontend for display
-
-the api key is stored securely in a .env file and never exposed to the client
-
-### Expense Calculation
-
-the app calculates trip costs using:
-- actual flight prices from serpapi
-- hotel costs based on selected star rating and trip duration
-- food costs based on preference level
-- transport costs estimated at 0.40 per kilometer
-- a 10 percent tax on the subtotal
+## Local Development
 
 ### Requirements
-Node.js 18 or newer for local development
-npm
+- Node.js 18.x or newer
+- npm
 
-### Environment setup
-Create a `.env` file in the project root for local development:
+### 1. Install dependencies
+```bash
+npm install
 ```
-SERPAPI_KEY=your_private_api_key_here
+
+### 2. Configure Environment Variables
+Copy `.env.example` to `.env` in the root directory:
+```bash
+cp .env.example .env
+```
+Edit `.env` and set your SerpApi API key:
+```env
+SERPAPI_KEY=your_serpapi_key_here
 PORT=6003
 ALLOWED_ORIGINS=https://manish-datrik.github.io,http://localhost:6003,http://127.0.0.1:6003
 ```
 
-## Deploy to Vercel
+### 3. Run the Local Server
+```bash
+npm start
+```
+Open [http://localhost:6003](http://localhost:6003) in your browser.
 
-1. Import this repository into Vercel and keep the project root as the repository root.
-2. In the Vercel project settings, add `SERPAPI_KEY` as an environment variable for Production (and Preview/Development if needed). Do not commit the key.
-3. Deploy. Vercel serves the HTML, CSS, and image files as static assets and routes `/api/*` requests through the serverless function in `api/[...route].js`.
-4. No build command is required. The flight-price API requires `SERPAPI_KEY`; without it, live flight lookups return an error.
-5. Expense submissions are not currently persisted; the API only acknowledges them.
+---
 
-For local development, run `npm start` and open `http://localhost:6003`.
+## API Endpoints
 
-## Features Implemented
+All endpoints are available relative to the domain (e.g., `https://your-domain.vercel.app/api/...` or `http://localhost:6003/api/...`):
 
-location autocomplete using nominatim open street map data
-real-time flight pricing from serpapi api
-responsive design that works on mobile, tablet, and desktop
-clean navigation across all pages
-budget summary cards showing trip details
-professional styling with gradients and smooth transitions
-form validation for all user inputs
-error handling for api failures with fallback prices
+- `GET /api/health` - Server health check status.
+- `GET /api/airports?q=delhi` - Autocomplete search for airport names and IATA codes.
+- `GET /api/flight-price?origin=DEL&destination=DXB&departureDate=2026-11-15&returnDate=2026-11-20&travelers=1` - Real-time Google Flights search using SerpApi.
+- `POST /api/expenses` - Accepts budget submissions.
+
+---
 
 ## How to Use
 
-1 go to the budget planner page
-2 enter your departure city in the origin field
-3 enter your destination city
-4 select your travel dates using the calendar
-5 enter the number of travelers
-6 choose your preferred hotel type
-7 select your food preference
-8 click calculate to see the full expense breakdown
-9 review your trip expense breakdown
+1. Go to the **Budget Planner** page (`/expence.html`).
+2. Search and select your departure airport in the **Departure Airport (From)** field.
+3. Search and select your destination airport in the **Destination Airport (To)** field.
+4. Select your travel dates using the interactive calendar.
+5. Specify the number of travelers (1–9).
+6. Choose your preferred hotel rating (3-Star, 4-Star, or 5-Star).
+7. Choose your dining preference (Budget, Standard, or Fine Dining).
+8. Click **Calculate Expense** to view your comprehensive itemized expense report.
 
-## Notes
+---
 
-the application uses real-time flight data from the serpapi api so prices reflect current market rates
-the api key is kept private on the backend to ensure security
-expense submissions are not currently stored
-the app is optimized for both desktop and mobile viewing
+## Deploying to Vercel
+
+1. Push your repository to GitHub (ensure `.env` is never committed; verify `.gitignore` is active).
+2. Go to [Vercel Dashboard](https://vercel.com/dashboard) and click **"Add New"** > **"Project"**.
+3. Import your `travels-agent` repository.
+4. Keep the default settings:
+   - **Framework Preset**: Other
+   - **Root Directory**: `./`
+   - **Build Command**: Leave empty / none needed
+   - **Output Directory**: Leave empty / default
+5. Under **Environment Variables**, add:
+   - `SERPAPI_KEY`: Your SerpApi API key
+6. Click **Deploy**.
+7. Both your frontend pages (`/`, `/expence.html`, `/hotel.html`, etc.) and backend routes (`/api/flight-price`, `/api/health`, etc.) will run under the same Vercel domain!

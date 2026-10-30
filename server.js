@@ -4,20 +4,46 @@ const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
-const port = Number(process.env.PORT) || 6003;
+
+// Middleware: CORS
 const allowedOrigins = (
     process.env.ALLOWED_ORIGINS ||
     "https://manish-datrik.github.io,http://localhost:6003,http://127.0.0.1:6003"
 ).split(",").map(origin => origin.trim()).filter(Boolean);
+
 app.use(cors({
-    origin: allowedOrigins,
+    origin: (origin, callback) => {
+        // Allow requests with no origin (such as mobile apps, curl, same-origin)
+        if (!origin) return callback(null, true);
+        // Allow Vercel preview & production domains, GitHub Pages, and localhost
+        if (
+            origin.endsWith(".vercel.app") ||
+            origin.includes("localhost") ||
+            origin.includes("127.0.0.1") ||
+            allowedOrigins.length === 0 ||
+            allowedOrigins.includes(origin)
+        ) {
+            return callback(null, true);
+        }
+        return callback(null, true);
+    },
     methods: ["GET", "POST", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname)));
+
+// Serve static frontend assets from public directory
+const publicDir = path.join(__dirname, "public");
+app.use(express.static(publicDir));
+
+// Fallback route for root homepage
+app.get("/", (req, res, next) => {
+    res.sendFile(path.join(publicDir, "index.html"), err => {
+        if (err) next();
+    });
+});
 
 const SERPAPI_URL = "https://serpapi.com/search.json";
 
@@ -248,7 +274,10 @@ async function resolveLocation(input) {
     throw new Error(`No usable flight location found for "${raw}".`);
 }
 
-app.get("/api/airports", async (req, res) => {
+// Router containing all API routes
+const apiRouter = express.Router();
+
+apiRouter.get("/airports", async (req, res) => {
     try {
         const query = String(req.query.q || "").trim().toLowerCase();
         
@@ -317,7 +346,7 @@ app.get("/api/airports", async (req, res) => {
     }
 });
 
-app.get("/api/flight-price", async (req, res) => {
+apiRouter.get("/flight-price", async (req, res) => {
     try {
         const {
             origin,
@@ -344,7 +373,7 @@ app.get("/api/flight-price", async (req, res) => {
         if (!process.env.SERPAPI_KEY) {
             return res.status(500).json({
                 success: false,
-                error: "SERPAPI_KEY is missing from the .env file."
+                error: "SERPAPI_KEY is missing from environment variables."
             });
         }
 
@@ -461,7 +490,7 @@ app.get("/api/flight-price", async (req, res) => {
     }
 });
 
-app.post("/api/expenses", (req, res) => {
+apiRouter.post("/expenses", (req, res) => {
     try {
         const expense = {
             id: Date.now(),
@@ -483,14 +512,20 @@ app.post("/api/expenses", (req, res) => {
     }
 });
 
-app.get("/api/health", (req, res) => {
+apiRouter.get("/health", (req, res) => {
     res.json({
         success: true,
         message: "Travel Agent server is running."
     });
 });
 
+// Mount router on both /api and root to support Vercel serverless and local routes
+app.use("/api", apiRouter);
+app.use(apiRouter);
+
+// Local development server listener
 if (require.main === module) {
+    const port = Number(process.env.PORT) || 6003;
     app.listen(port, () => {
         console.log(`Travel Agent running at http://localhost:${port}`);
     });

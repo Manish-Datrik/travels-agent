@@ -1,8 +1,11 @@
 {
   "name": "travels-agent",
   "version": "1.0.0",
-  "description": "",
+  "description": "Travels Agent - Full-stack travel expense planner and live flight search",
   "main": "server.js",
+  "engines": {
+    "node": ">=18.x"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
@@ -11,7 +14,14 @@
     "type": "git",
     "url": "git+https://github.com/Manish-Datrik/travels-agent.git"
   },
-  "keywords": [],
+  "keywords": [
+    "travel",
+    "flights",
+    "budget",
+    "serpapi",
+    "express",
+    "vercel"
+  ],
   "author": "",
   "license": "ISC",
   "type": "commonjs",

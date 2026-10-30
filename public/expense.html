@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travels Agent - Budget Planner</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, rgb(247, 228, 204), rgb(225, 242, 225));
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .nav-bar {
+            background-color: #2c3e50;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-bar ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 60px;
+            flex-wrap: wrap;
+        }
+
+        .nav-bar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 14px 18px;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .nav-bar a:hover,
+        .nav-bar a.active {
+            background-color: #f4b680;
+            color: #2c3e50;
+        }
+
+        .page-header {
+            text-align: center;
+            padding: 50px 20px 30px;
+        }
+
+        .page-header h1 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            font-size: 1.15rem;
+            color: #555;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto 60px;
+            padding: 0 20px;
+        }
+
+        .budget-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, #f4b680, #e89b5e);
+            color: white;
+            padding: 22px 20px;
+            border-radius: 14px;
+            text-align: center;
+            box-shadow: 0 6px 18px rgba(244, 182, 128, 0.35);
+        }
+
+        .summary-card h3 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+
+        .summary-card .value {
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+            margin-bottom: 40px;
+        }
+
+        .form-card h2 {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .form-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .destination-search {
+            position: relative;
+            width: 100%;
+        }
+
+        .destination-search input,
+        #dateRange,
+        .passengers-input,
+        .form-group select {
+            width: 100%;
+            height: 52px;
+            padding: 12px 16px;
+            border: 2px solid #e8e8e8;
+            border-radius: 10px;
+            background-color: #fcfcfc;
+            font-size: 0.98rem;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .destination-search input {
+            padding-right: 45px;
+        }
+
+        .destination-search input:focus,
+        #dateRange:focus,
+        .passengers-input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #f4b680;
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(244, 182, 128, 0.25);
+        }
+
+        .suggestions {
+            position: absolute;
+            width: 100%;
+            background: white;
+            border: 2px solid #e8e8e8;
+            border-top: none;
+            max-height: 300px;
+            overflow-y: auto;
+            border-radius: 0 0 12px 12px;
+            z-index: 100;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+        }
+
+        .airport-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            cursor: pointer;
+            border-bottom: 1px solid #f2f2f2;
+            transition: all 0.2s ease;
+        }
+
+        .airport-item:hover {
+            background: #fff5e6;
+            padding-left: 20px;
+        }
+
+        .airport-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-align: left;
+        }
+
+        .airport-icon {
+            font-size: 1.25rem;
+            color: #f4b680;
+        }
+
+        .airport-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .airport-sub {
+            font-size: 0.82rem;
+            color: #777;
+            margin-top: 2px;
+        }
+
+        .airport-badge {
+            background: #2c3e50;
+            color: #f4b680;
+            font-weight: 700;
+            font-size: 0.85rem;
+            padding: 4px 10px;
+            border-radius: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .airport-item:hover .airport-badge {
+            background: #e89b5e;
+            color: white;
+        }
+
+        .airport-empty {
+            padding: 16px;
+            text-align: center;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .clear {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 22px;
+            cursor: pointer;
+            color: #999;
+            display: none;
+            user-select: none;
+        }
+
+        .clear:hover {
+            color: #e74c3c;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 30px 0 20px;
+        }
+
+        .btn {
+            padding: 14px 36px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.25s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #f4b680, #e89b5e);
+            color: white;
+            box-shadow: 0 4px 14px rgba(244, 182, 128, 0.4);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #e89b5e, #d88344);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #2c3e50;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #1a252f;
+        }
+
+        #resultBox {
+            margin-top: 24px;
+        }
+
+        .report-card {
+            background: #fffdf9;
+            border: 2px solid #f4b680;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 8px 24px rgba(244, 182, 128, 0.2);
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px dashed #f4b680;
+            padding-bottom: 16px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .report-header h2 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin: 0;
+            text-align: left;
+        }
+
+        .report-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+            background: #ffffff;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid #fae1cc;
+        }
+
+        .report-grid-item {
+            font-size: 0.95rem;
+            color: #444;
+        }
+
+        .report-grid-item strong {
+            color: #2c3e50;
+        }
+
+        .report-breakdown {
+            margin: 20px 0;
+        }
+
+        .breakdown-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f2e4d5;
+            font-size: 1.05rem;
+        }
+
+        .breakdown-row.total {
+            border-top: 2px solid #2c3e50;
+            border-bottom: none;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2c3e50;
+            padding-top: 16px;
+            margin-top: 8px;
+        }
+
+        .flight-badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            background: #27ae60;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-left: 6px;
+            font-weight: 600;
+        }
+
+        .flight-notice {
+            background: #fff3cd;
+            color: #856404;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            margin: 12px 0;
+            border-left: 4px solid #ffeeba;
+        }
+
+        .flatpickr-day.selected,
+        .flatpickr-day.startRange,
+        .flatpickr-day.endRange {
+            background: #f4b680 !important;
+            border-color: #f4b680 !important;
+        }
+
+        .flatpickr-day.inRange {
+            background: #fff5e6 !important;
+        }
+
+        @media (max-width: 768px) {
+            .form-card {
+                padding: 24px;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .nav-bar ul {
+                flex-direction: column;
+            }
+
+            .nav-bar li {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="nav-bar">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="makeyourtrip.html">Make Your Trip</a></li>
+            <li><a href="populardestinations.html">Popular Destinations</a></li>
+            <li><a href="expence.html" class="active">Budget Planner</a></li>
+        </ul>
+    </nav>
+
+    <header class="page-header">
+        <h1>Travel Budget Planner</h1>
+        <p>Live flight rates between verified airports worldwide</p>
+    </header>
+
+    <main class="container">
+        <section class="budget-summary">
+            <div class="summary-card">
+                <h3>Total Travelers</h3>
+                <div class="value" id="totalTravelers">1</div>
+            </div>
+
+            <div class="summary-card">
+                <h3>Trip Duration</h3>
+                <div class="value" id="tripDuration">-</div>
+            </div>
+
+            <div class="summary-card">
+                <h3>Route</h3>
+                <div class="value" id="routeDisplay">-</div>
+            </div>
+        </section>
+
+        <section class="form-card">
+            <h2>Plan Your Journey</h2>
+
+            <form id="budgetForm">
+                <div class="form-section">
+                    <div class="form-group">
+                        <label for="fromCity">Departure Airport (From)</label>
+                        <div class="destination-search">
+                            <input
+                                type="text"
+                                id="fromCity"
+                                class="destinationInput"
+                                data-suggestions-id="suggestionsFrom"
+                                placeholder="Search departure airport (e.g. Delhi, Hyderabad, DEL)"
+                                autocomplete="off"
+                                required
+                            >
+                            <span class="clear">&times;</span>
+                            <div id="suggestionsFrom" class="suggestions"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="toCity">Destination Airport (To)</label>
+                        <div class="destination-search">
+                            <input
+                                type="text"
+                                id="toCity"
+                                class="destinationInput"
+                                data-suggestions-id="suggestionsTo"
+                                placeholder="Search arrival airport (e.g. Dubai, Goa, DXB)"
+                                autocomplete="off"
+                                required
+                            >
+                            <span class="clear">&times;</span>
+                            <div id="suggestionsTo" class="suggestions"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-group">
+                        <label for="dateRange">Travel Dates (Departure to Return)</label>
+                        <input
+                            type="text"
+                            id="dateRange"
+                            placeholder="Select travel dates"
+                            readonly
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="passengers">Number of Travelers</label>
+                        <input
+                            type="number"
+                            id="passengers"
+                            class="passengers-input"
+                            min="1"
+                            max="9"
+                            value="1"
+                            placeholder="1 - 9"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-group">
+                        <label for="hotelType">Hotel Rating</label>
+                        <select id="hotelType">
+                            <option value="3">3 Star Standard ($70 / night)</option>
+                            <option value="4" selected>4 Star Premium ($120 / night)</option>
+                            <option value="5">5 Star Luxury Resort ($190 / night)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="foodType">Dining Preference</label>
+                        <select id="foodType">
+                            <option value="20">Budget & Street Food ($20 / day)</option>
+                            <option value="40" selected>Standard Dining ($40 / day)</option>
+                            <option value="70">Gourmet & Fine Dining ($70 / day)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Calculate Expense</button>
+                    <button type="reset" class="btn btn-secondary">Clear Form</button>
+                </div>
+
+                <div id="resultBox"></div>
+            </form>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <script>
+        const isGitHubPages = window.location.hostname.endsWith('.github.io');
+        let airportDataPromise;
+
+        async function loadAirportData() {
+            if (!airportDataPromise) {
+                airportDataPromise = fetch('./airports.json')
+                    .then((response) => {
+                        if (!response.ok) throw new Error('Could not load airports.json');
+                        return response.json();
+                    });
+            }
+            return airportDataPromise;
+        }
+
+        async function getFlightPrice(origin, destination, departureDate, returnDate, travelers) {
+            const params = new URLSearchParams({
+                origin,
+                destination,
+                departureDate,
+                travelers: String(travelers)
+            });
+
+            if (returnDate) {
+                params.set("returnDate", returnDate);
+            }
+
+            if (isGitHubPages) {
+                throw new Error('Live flight prices need the application API. Deploy this project to Vercel or run the local server.');
+            }
+
+            const response = await fetch(`/api/flight-price?${params}`);
+            const data = await response.json();
+
+            if (!response.ok || !data.success) {
+                throw new Error(data.error || "Unable to fetch live flight prices.");
+            }
+
+            return data;
+        }
+
+        async function getDistance(origin, destination) {
+            return 1200;
+        }
+
+        async function getHotelPrice(destination, hotelType) {
+            if (hotelType === '3') return 70;
+            if (hotelType === '4') return 120;
+            if (hotelType === '5') return 190;
+            return 100;
+        }
+
+        function initAirportAutocomplete(container) {
+            const input = container.querySelector('.destinationInput');
+            const suggestions = document.getElementById(input.dataset.suggestionsId);
+            const clearButton = container.querySelector('.clear');
+
+            let debounceTimer = null;
+
+            async function fetchAirports(query) {
+                try {
+                    const airports = await loadAirportData();
+                    const term = query.trim().toLowerCase();
+
+                    if (!term) return airports.slice(0, 8);
+
+                    return airports.filter((airport) =>
+                        airport.code.toLowerCase().includes(term) ||
+                        airport.name.toLowerCase().includes(term) ||
+                        airport.city.toLowerCase().includes(term) ||
+                        airport.country.toLowerCase().includes(term)
+                    ).slice(0, 8);
+                } catch (err) {
+                    console.error("Airport data failed to load:", err);
+                    return [];
+                }
+            }
+
+            function renderAirports(airports) {
+                suggestions.innerHTML = '';
+
+                if (!airports || airports.length === 0) {
+                    suggestions.innerHTML = '<div class="airport-empty">No matching commercial airports found.</div>';
+                    return;
+                }
+
+                airports.forEach((airport) => {
+                    const item = document.createElement('div');
+                    item.className = 'airport-item';
+
+                    item.innerHTML = `
+                        <div class="airport-info">
+                            <div>
+                                <div class="airport-name">${airport.name}</div>
+                                <div class="airport-sub">${airport.city}${airport.country ? ', ' + airport.country : ''}</div>
+                            </div>
+                        </div>
+                        <span class="airport-badge">${airport.code}</span>
+                    `;
+
+                    item.addEventListener('click', () => {
+                        input.value = `${airport.name} (${airport.code})`;
+                        input.dataset.iata = airport.code;
+                        suggestions.innerHTML = '';
+                        clearButton.style.display = 'block';
+                        updateSummary();
+                    });
+
+                    suggestions.appendChild(item);
+                });
+            }
+
+            input.addEventListener('focus', async () => {
+                const val = input.value.trim();
+                const airports = await fetchAirports(val);
+                renderAirports(airports);
+            });
+
+            input.addEventListener('input', () => {
+                clearButton.style.display = input.value.length > 0 ? 'block' : 'none';
+
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(async () => {
+                    const val = input.value.trim();
+                    const airports = await fetchAirports(val);
+                    renderAirports(airports);
+                }, 150);
+            });
+
+            clearButton.addEventListener('click', (event) => {
+                event.preventDefault();
+                input.value = '';
+                input.dataset.iata = '';
+                suggestions.innerHTML = '';
+                clearButton.style.display = 'none';
+                input.focus();
+                updateSummary();
+            });
+
+            document.addEventListener('click', (event) => {
+                if (!container.contains(event.target)) {
+                    suggestions.innerHTML = '';
+                }
+            });
+        }
+
+        function extractRouteBadge(val) {
+            if (!val) return '';
+            const match = val.match(/\(([A-Za-z]{3})\)/);
+            if (match) return match[1];
+            return val.split(',')[0].trim();
+        }
+
+        function updateSummary() {
+            const travelers = document.getElementById('passengers').value || '1';
+            const from = document.getElementById('fromCity').value;
+            const to = document.getElementById('toCity').value;
+            const dateRange = document.getElementById('dateRange').value;
+
+            document.getElementById('totalTravelers').textContent = travelers;
+
+            const fromCode = extractRouteBadge(from);
+            const toCode = extractRouteBadge(to);
+            document.getElementById('routeDisplay').textContent =
+                fromCode && toCode ? `${fromCode} → ${toCode}` : '-';
+
+            if (!dateRange) {
+                document.getElementById('tripDuration').textContent = '-';
+                return;
+            }
+
+            const dates = dateRange.split(' to ');
+            if (dates.length !== 2) {
+                document.getElementById('tripDuration').textContent = '-';
+                return;
+            }
+
+            const start = new Date(dates[0]);
+            const end = new Date(dates[1]);
+            const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+            document.getElementById('tripDuration').textContent = `${days} days`;
+        }
+
+        function showResult(html) {
+            document.getElementById('resultBox').innerHTML = html;
+        }
+
+        document.querySelectorAll('.destination-search').forEach(initAirportAutocomplete);
+
+        flatpickr('#dateRange', {
+            mode: 'range',
+            minDate: 'today',
+            dateFormat: 'M d, Y',
+            onChange: updateSummary
+        });
+
+        document.getElementById('passengers').addEventListener('change', updateSummary);
+        document.getElementById('hotelType').addEventListener('change', updateSummary);
+        document.getElementById('foodType').addEventListener('change', updateSummary);
+
+        document.getElementById('budgetForm').addEventListener('reset', () => {
+            setTimeout(() => {
+                updateSummary();
+                showResult('');
+            });
+        });
+
+        document.getElementById('budgetForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const from = document.getElementById('fromCity').value.trim();
+            const to = document.getElementById('toCity').value.trim();
+            const dateRange = document.getElementById('dateRange').value.trim();
+            const travelers = Number.parseInt(document.getElementById('passengers').value, 10) || 1;
+            const hotelType = document.getElementById('hotelType').value;
+            const foodRate = Number.parseFloat(document.getElementById('foodType').value);
+
+            if (!from || !to || !dateRange || travelers < 1) {
+                showResult('<div style="color:#b00020; font-weight:700; padding:15px; text-align:center;">Please fill all airport and date details.</div>');
+                return;
+            }
+
+            const dates = dateRange.split(' to ');
+            if (dates.length !== 2) {
+                showResult('<div style="color:#b00020; font-weight:700; padding:15px; text-align:center;">Please select both departure and return dates.</div>');
+                return;
+            }
+
+            const start = new Date(dates[0]);
+            const end = new Date(dates[1]);
+            const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+
+            const fromBadge = extractRouteBadge(from);
+            const toBadge = extractRouteBadge(to);
+
+            showResult(`
+                <div style="text-align: center; padding: 25px;">
+                    <div style="font-size: 1.2rem; color: #2c3e50; font-weight: 600; margin-bottom: 8px;">
+                        Searching live flight prices via Google Flights...
+                    </div>
+                    <div style="color: #666; font-size: 0.95rem;">Checking SerpApi for flights from ${fromBadge} to ${toBadge}...</div>
+                </div>
+            `);
+
+            let flightCost = 0;
+            let isLiveFlight = false;
+            let flightNoticeHtml = '';
+
+            try {
+                const flightResult = await getFlightPrice(from, to, dates[0], dates[1], travelers);
+                flightCost = flightResult.price;
+                isLiveFlight = true;
+            } catch (flightErr) {
+                console.warn("Live flight lookup failed, using estimated route baseline:", flightErr.message);
+                const distanceKm = await getDistance(from, to);
+                flightCost = (250 + (distanceKm * 0.12)) * travelers;
+                flightNoticeHtml = `
+                    <div class="flight-notice">
+                        <strong>Flight Note:</strong> Live flight search returned: "${flightErr.message}". 
+                        Using estimated round-trip route pricing ($${flightCost.toFixed(2)}) based on distance.
+                    </div>
+                `;
+            }
+
+            const distanceKm = await getDistance(from, to);
+            const hotelRate = await getHotelPrice(to, hotelType);
+            const hotelCost = hotelRate * days * travelers;
+            const foodCost = foodRate * days * travelers;
+            const transportCost = distanceKm * 0.4;
+
+            const subtotal = flightCost + hotelCost + foodCost + transportCost;
+            const tax = subtotal * 0.1;
+            const total = subtotal + tax;
+
+            showResult(`
+                <div class="report-card">
+                    <div class="report-header">
+                        <h2>Travel Expense Report</h2>
+                        <span style="font-size: 0.9rem; color: #666;">Generated on ${new Date().toLocaleDateString()}</span>
+                    </div>
+
+                    <div class="report-grid">
+                        <div class="report-grid-item"><strong>Departure Airport:</strong> ${from}</div>
+                        <div class="report-grid-item"><strong>Arrival Airport:</strong> ${to}</div>
+                        <div class="report-grid-item"><strong>Duration:</strong> ${days} Days (${dateRange})</div>
+                        <div class="report-grid-item"><strong>Travelers:</strong> ${travelers} Person(s)</div>
+                    </div>
+
+                    ${flightNoticeHtml}
+
+                    <div class="report-breakdown">
+                        <div class="breakdown-row">
+                            <span>
+                                Flights (${travelers} travelers: ${fromBadge} to ${toBadge})
+                                ${isLiveFlight ? '<span class="flight-badge">Live Google Flights Rate</span>' : '<span class="flight-badge" style="background:#f39c12;">Estimated</span>'}
+                            </span>
+                            <strong>$${flightCost.toFixed(2)}</strong>
+                        </div>
+                        <div class="breakdown-row">
+                            <span>Hotel Accommodation (${hotelType}-Star for ${days} nights)</span>
+                            <strong>$${hotelCost.toFixed(2)}</strong>
+                        </div>
+                        <div class="breakdown-row">
+                            <span>Food & Dining (${days} days)</span>
+                            <strong>$${foodCost.toFixed(2)}</strong>
+                        </div>
+                        <div class="breakdown-row">
+                            <span>Local Airport Transfers & Transport</span>
+                            <strong>$${transportCost.toFixed(2)}</strong>
+                        </div>
+                        <div class="breakdown-row">
+                            <span>Taxes & Surcharges (10%)</span>
+                            <strong>$${tax.toFixed(2)}</strong>
+                        </div>
+                        <div class="breakdown-row total">
+                            <span>Total Estimated Trip Budget:</span>
+                            <span style="color: #0088cc;">$${total.toFixed(2)}</span>
+                        </div>
+                    </div>
+                </div>
+            `);
+
+            updateSummary();
+        });
+
+        // Auto-fill destination if passed via URL parameter (e.g. from Popular Destinations or Search)
+        window.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const toParam = urlParams.get('to');
+            if (toParam) {
+                const toInput = document.getElementById('toCity');
+                if (toInput) {
+                    try {
+                        const airports = await loadAirportData();
+                        const term = toParam.trim().toLowerCase();
+                        const ap = airports.find((airport) =>
+                            airport.code.toLowerCase() === term ||
+                            airport.city.toLowerCase() === term ||
+                            airport.name.toLowerCase().includes(term) ||
+                            airport.city.toLowerCase().includes(term)
+                        );
+
+                        if (ap) {
+                            toInput.value = `${ap.name} (${ap.code})`;
+                            toInput.dataset.iata = ap.code;
+                        } else {
+                            toInput.value = toParam;
+                        }
+                    } catch (e) {
+                        toInput.value = toParam;
+                    }
+                    const clearBtn = toInput.closest('.destination-search')?.querySelector('.clear');
+                    if (clearBtn) clearBtn.style.display = 'block';
+                    updateSummary();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
