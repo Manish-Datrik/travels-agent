@@ -6,12 +6,16 @@ require("dotenv").config();
 const app = express();
 
 // Middleware: CORS
-const allowedOrigins = (process.env.ALLOWED_ORIGINS || "").split(",").map(o => o.trim()).filter(Boolean);
+const allowedOrigins = (
+    process.env.ALLOWED_ORIGINS ||
+    "https://manish-datrik.github.io,http://localhost:6003,http://127.0.0.1:6003"
+).split(",").map(origin => origin.trim()).filter(Boolean);
+
 app.use(cors({
     origin: (origin, callback) => {
         // Allow requests with no origin (such as mobile apps, curl, same-origin)
         if (!origin) return callback(null, true);
-        // Allow Vercel preview & production domains, and localhost
+        // Allow Vercel preview & production domains, GitHub Pages, and localhost
         if (
             origin.endsWith(".vercel.app") ||
             origin.includes("localhost") ||
@@ -34,7 +38,7 @@ app.use(express.urlencoded({ extended: true }));
 const publicDir = path.join(__dirname, "public");
 app.use(express.static(publicDir));
 
-// Fallback route for index
+// Fallback route for root homepage
 app.get("/", (req, res, next) => {
     res.sendFile(path.join(publicDir, "index.html"), err => {
         if (err) next();

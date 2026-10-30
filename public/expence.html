@@ -569,7 +569,6 @@
 
     <script>
         const isGitHubPages = window.location.hostname.endsWith('.github.io');
-        const apiBase = isGitHubPages ? null : "";
         let airportDataPromise;
 
         async function loadAirportData() {
@@ -595,7 +594,7 @@
                 params.set("returnDate", returnDate);
             }
 
-            if (!apiBase) {
+            if (isGitHubPages) {
                 throw new Error('Live flight prices need the application API. Deploy this project to Vercel or run the local server.');
             }
 
