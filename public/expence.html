@@ -568,8 +568,8 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <script>
-        const isLocalServer = ['localhost', '127.0.0.1'].includes(window.location.hostname);
-        const apiBase = isLocalServer ? window.location.origin : null;
+        const isGitHubPages = window.location.hostname.endsWith('.github.io');
+        const apiBase = isGitHubPages ? null : "";
         let airportDataPromise;
 
         async function loadAirportData() {
@@ -596,10 +596,10 @@
             }
 
             if (!apiBase) {
-                throw new Error('Live flight prices need a backend server. Using an estimated flight price on GitHub Pages.');
+                throw new Error('Live flight prices need the application API. Deploy this project to Vercel or run the local server.');
             }
 
-            const response = await fetch(`${apiBase}/api/flight-price?${params}`);
+            const response = await fetch(`/api/flight-price?${params}`);
             const data = await response.json();
 
             if (!response.ok || !data.success) {
