@@ -80,12 +80,6 @@ PORT=6003
 ALLOWED_ORIGINS=https://manish-datrik.github.io,http://localhost:6003,http://127.0.0.1:6003
 ```
 
-### 3. Run the Local Server
-```bash
-npm start
-```
-Open [http://localhost:6003](http://localhost:6003) in your browser.
-
 ---
 
 ## API Endpoints
