@@ -1,4 +1,5 @@
 # Travels Agent
+https://travels-agent.vercel.app
 
 Full-stack travel planning application that calculates comprehensive trip budgets and retrieves real-time flight rates powered by Google Flights and SerpApi.
 
