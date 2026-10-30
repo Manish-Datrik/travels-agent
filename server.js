@@ -5,8 +5,12 @@ require("dotenv").config();
 
 const app = express();
 const port = Number(process.env.PORT) || 6003;
+const allowedOrigins = (
+    process.env.ALLOWED_ORIGINS ||
+    "https://manish-datrik.github.io,http://localhost:6003,http://127.0.0.1:6003"
+).split(",").map(origin => origin.trim()).filter(Boolean);
 app.use(cors({
-    origin: "https://travels-agent.onrender.com",
+    origin: allowedOrigins,
     methods: ["GET", "POST", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
@@ -486,6 +490,10 @@ app.get("/api/health", (req, res) => {
     });
 });
 
-app.listen(port, () => {
-    console.log(`Travel Agent running at http://localhost:${port}`);
-});
+if (require.main === module) {
+    app.listen(port, () => {
+        console.log(`Travel Agent running at http://localhost:${port}`);
+    });
+}
+
+module.exports = app;

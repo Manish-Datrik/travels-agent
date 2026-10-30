@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="travel-agent-api-url" content="https://travels-agent-api.onrender.com">
     <title>Travels Agent - Budget Planner</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -569,9 +568,8 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <script>
-        const isLocalServer = ['localhost', '127.0.0.1'].includes(window.location.hostname);
-        const configuredApiBase = document.querySelector('meta[name="travel-agent-api-url"]')?.content.trim();
-        const apiBase = (configuredApiBase || (isLocalServer ? window.location.origin : '')).replace(/\/+$/, '');
+        const isGitHubPages = window.location.hostname.endsWith('.github.io');
+        const apiBase = isGitHubPages ? null : window.location.origin;
         let airportDataPromise;
 
         async function loadAirportData() {
@@ -598,7 +596,7 @@
             }
 
             if (!apiBase) {
-                throw new Error('Live flight pricing is not configured. Set the travel-agent-api-url meta value in expence.html to your backend URL.');
+                throw new Error('Live flight prices need the application API. Deploy this project to Vercel or run the local server.');
             }
 
             const response = await fetch(`${apiBase}/api/flight-price?${params}`);

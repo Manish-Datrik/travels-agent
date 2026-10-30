@@ -1,11 +1,11 @@
 # Travels Agent
 
 a travel planning application that helps users calculate trip expenses and find flight prices
-Website: https://travels-agent.onrender.com
-Backend API: https://travels-agent-api.onrender.com
+https://manish-datrik.github.io/travels-agent/
+
 ## Overview
 
-travels agent is a full-stack web application designed to help travelers plan their trips by calculating total expenses including flights, hotels, food, and transport costs. the app provides a user-friendly interface for entering trip details and displays a comprehensive budget breakdown
+Travels Agent is a web application designed to help travelers plan trips by calculating expenses for flights, hotels, food, and transport.
 
 ### Main Features
 
@@ -17,19 +17,18 @@ the application allows users to:
 - select food preference (budget, standard, or luxury)
 - get real-time flight prices from the serpapi flight search api
 - view a complete expense breakdown including flights, hotels, food, and transport
-- view a complete trip budget breakdown
 
 ### Frontend
 html5 for structure
 css3 for styling with modern gradients and responsive design
 javascript (vanilla) for interactive features
 flatpickr library for date range selection
-airport autocomplete with verified airport data
+nominatim api for location autocomplete
 
 ### Backend
 node.js with express framework
 cors middleware for handling cross-origin requests
-dotenv for private environment configuration
+dotenv for environment configuration
 serpapi integration for real-time flight pricing
 
 
@@ -53,33 +52,32 @@ the app calculates trip costs using:
 - a 10 percent tax on the subtotal
 
 ### Requirements
-Node.js 20 or higher and npm.
+Node.js 18 or newer for local development
+npm
 
 ### Environment setup
-For local development, create a `.env` file and add your private SerpApi key:
+Create a `.env` file in the project root for local development:
 ```
 SERPAPI_KEY=your_private_api_key_here
+PORT=6003
+ALLOWED_ORIGINS=https://manish-datrik.github.io,http://localhost:6003,http://127.0.0.1:6003
 ```
 
-Never put API keys in HTML, frontend JavaScript, or a committed file. All `.env` files, including examples, are ignored by Git.
+## Deploy to Vercel
 
-## Deploy live flight pricing
+1. Import this repository into Vercel and keep the project root as the repository root.
+2. In the Vercel project settings, add `SERPAPI_KEY` as an environment variable for Production (and Preview/Development if needed). Do not commit the key.
+3. Deploy. Vercel serves the HTML, CSS, and image files as static assets and routes `/api/*` requests through the serverless function in `api/[...route].js`.
+4. No build command is required. The flight-price API requires `SERPAPI_KEY`; without it, live flight lookups return an error.
+5. Expense submissions are not currently persisted; the API only acknowledges them.
 
-GitHub Pages hosts the static website but cannot run the Express API. The API is configured to run separately on Render using the Blueprint in `render.yaml`.
-
-1. In Render, create a Blueprint from this repository and deploy the branch used for the app.
-2. Set `SERPAPI_KEY` in the Render service's environment settings. Do not enter it into GitHub Pages or the HTML.
-3. The frontend is configured for `https://travels-agent-api.onrender.com`. If Render assigns a different service URL, update the `travel-agent-api-url` meta tag in `expence.html` to that public URL and publish the page.
-4. Confirm the Render service's `/api/health` endpoint succeeds, then try a flight search on the GitHub Pages site.
-
-The backend permits requests from the GitHub Pages origin and local development by default. Change `ALLOWED_ORIGINS` in Render if the site uses a different domain. Flight searches are limited to 10 requests per minute per client IP. The Render free service may take a short time to wake up before answering the first request.
+For local development, run `npm start` and open `http://localhost:6003`.
 
 ## Features Implemented
 
 location autocomplete using nominatim open street map data
 real-time flight pricing from serpapi api
 responsive design that works on mobile, tablet, and desktop
-server-side flight API integration
 clean navigation across all pages
 budget summary cards showing trip details
 professional styling with gradients and smooth transitions
@@ -96,9 +94,11 @@ error handling for api failures with fallback prices
 6 choose your preferred hotel type
 7 select your food preference
 8 click calculate to see the full expense breakdown
+9 review your trip expense breakdown
+
 ## Notes
 
 the application uses real-time flight data from the serpapi api so prices reflect current market rates
 the api key is kept private on the backend to ensure security
-flight prices are fetched by the server, which keeps the API key out of the browser
+expense submissions are not currently stored
 the app is optimized for both desktop and mobile viewing
